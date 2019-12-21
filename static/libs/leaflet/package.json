@@ -32,7 +32,7 @@
   },
   "description": "JavaScript library for mobile-friendly interactive maps",
   "devDependencies": {
-    "eslint": "^3.5.0 <3.6.0",
+    "eslint": "^3.5.0 <6.9.0",
     "eslint-config-mourner": "^2.0.1",
     "git-rev-sync": "^1.8.0",
     "happen": "~0.3.1",
