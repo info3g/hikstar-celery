@@ -1,0 +1,91 @@
+{% extends 'hikster-admin/base_sidebar_authenticated.html' %}
+{% load i18n %}
+{% load static from staticfiles %}
+{% load render_bundle from webpack_loader %}
+
+{% block extra_styles %}
+    <link href="{% static 'hikster-admin/css/table-fixed.css' %}" rel="stylesheet" />
+{% endblock extra_styles %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:index' %}">{% trans 'Hikster Admin' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:organization' organization_id=organization.id%}">
+            {{ organization.name }}
+        </a>
+    </li>
+    <li class="breadcrumb-item">
+        {% trans "Locations" %}
+    </li>
+{% endblock %}
+
+{% block content %}
+    {{ geo_json|json_script:"geojson-data" }}
+    {{ locations|json_script:"locations-data" }}
+    {{ poi_categories|json_script:"poi-categories-data" }}
+
+    <div id="location-list" class="row location-list">
+        <div class="col-lg-5">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th
+                          class="sortable"
+                          v-for="(header, idx) in headerNames"
+                          :key="idx"
+                          @click="sortData(header.key)"
+                        >
+                            {[ header.name ]}
+                            <hk-sort-icon
+                              v-show="header.key === sortBy.key"
+                              :sort-by="sortBy"
+                              :header="header.key"
+                            />
+                        </th>
+                        <th class="text-center">{% trans "Online" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                      v-for="location in locations"
+                      @mouseover="highlightLocation(location.location_id)"
+                      @mouseout="_handleHighlightOff"
+                      :class="getRowClass(location.location_id)"
+                      :key="location.location_id"
+                    >
+                        <td>
+                            <a :href="location.location_id">{[ location.name ]}</a>
+                        </td>
+                        <td>
+                            {[ location.modified_date|dateFormat ]}
+                        </td>
+                        <td class="text-center online">
+                            <a :href="'/locations/' + location.location_id" target="_blank">
+                                <hk-globe-icon></hk-globe-icon>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr v-if="locations.length == 0">
+                        <td class="col-12 text-center">{% trans "This Organization has no Location yet" %}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-7 map-container">
+            <div id="map" class="map"></div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block body_extra_js %}
+    <script>
+        var headerNames = [
+            {key: 'name', name: '{% trans "Name" %}'},
+            {key: 'modified_date', name: '{% trans "Last Modified" %}'}
+        ];
+    </script>
+    {% include "website/components/map-scripts.html" %}
+    {% render_bundle "admin_location_list" %}
+{% endblock body_extra_js %}

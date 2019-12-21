@@ -1,0 +1,21 @@
+@media screen and (min-width: 20em) {
+  .misc-page__content {
+    width: 100%;
+  }
+}
+
+.misc-page__content {
+  padding: 1.875em;
+}
+
+.misc-page__content .misc-page__item h2 {
+  margin-top: 2em;
+  font-weight: bold !important;
+}
+
+@media screen and (min-width: 720px) {
+  .misc-page__content {
+    margin: 0 auto;
+    width: 75% !important;
+  }
+}

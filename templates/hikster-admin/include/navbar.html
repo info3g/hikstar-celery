@@ -1,0 +1,36 @@
+{% load i18n %}
+{% load static from staticfiles %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+  <a class="navbar-brand" href="{% url 'hikster-admin:index' %}">
+    <img src="{% static 'img/Logo_128px_Green.png' %}" alt="" />
+  </a>
+
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" target="_blank" href="{% url 'toc' %}">
+            {% trans "Terms of use" %}
+        </a>
+      </li>
+      {% if user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'hikster-admin:logout' %}">
+            {% trans "Logout" %}
+        </a>
+      </li>
+      {% endif %}
+  </div>
+</nav>

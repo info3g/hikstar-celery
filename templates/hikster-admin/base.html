@@ -1,0 +1,54 @@
+{% load i18n %}
+{% load static from staticfiles %}
+<html>
+  <head>
+    <title>{% trans 'Hikster Admin' %}</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    </style>
+    {% block head_styles %}
+
+    <link href="{% static 'css/pace.css' %}" rel="stylesheet" />
+    <link href="{% static 'libs/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'hikster-admin/css/main.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/footer.css' %}" rel="stylesheet" />
+    {% endblock %}
+
+    {% block extra_styles %}
+    {% endblock extra_styles %}
+
+    {% include "settings.html" %}
+  </head>
+  <body>
+    {% block body_before_container %}
+    {% endblock body_before_container%}
+    <div class="container-fluid admin-container">
+      {% block body_container %}
+      {% endblock body_container%}
+    </div>
+
+    {% include "website/footer.html" %}
+
+
+    {% block js_before %}
+    {% endblock js_before %}
+
+    {% block body_js %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'libs/pace.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap/js/bootstrap.min.js' %}"></script>
+    {% endblock body_js %}
+
+    {% block body_extra_js %}
+    {% endblock body_extra_js %}
+  </body>
+</html>

@@ -1,0 +1,320 @@
+.map {
+  cursor: pointer !important;
+}
+.map .leaflet-zoom-anim .leaflet-zoom-animated {
+  -webkit-transition: -webkit-transform 1s cubic-bezier(0, 0, 0.25, 1);
+  -moz-transition: -moz-transform 1s cubic-bezier(0, 0, 0.25, 1);
+  -o-transition: -o-transform 1s cubic-bezier(0, 0, 0.25, 1);
+  transition: transform 1s cubic-bezier(0, 0, 0.25, 1);
+}
+.map .leaflet-popup-content {
+  margin: 13px;
+}
+.map .leaflet-popup-content .lf-popup.poi .header {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  box-direction: normal;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-direction: column;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  box-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  -o-align-items: center;
+  align-items: center;
+  -ms-flex-align: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  box-pack: center;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  -ms-justify-content: center;
+  -o-justify-content: center;
+  justify-content: center;
+  -ms-flex-pack: center;
+}
+.map .leaflet-popup-content .lf-popup.poi .header .icon {
+  width: 30px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+.map .leaflet-popup-content .lf-popup.poi .header .icon.default {
+  background-image: none;
+}
+.map .leaflet-popup-content .lf-popup.poi .header .icon.hebergement {
+  background-image: url("../img/SVG_Carte_Couleurs/2_colors/Icons_Hikster_2_colors-26.svg");
+}
+.map .leaflet-popup-content .lf-popup.poi .header .text {
+  margin-left: 4px;
+  color: #639a3f;
+  font-size: 14px;
+  font-weight: bold;
+}
+.map .leaflet-popup-content .lf-popup.poi .header .type {
+  color: #639a3f;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.map .leaflet-popup-content .lf-popup.poi .content {
+  padding: 5px;
+}
+.map .leaflet-popup-content .lf-popup.poi .content div {
+  margin-bottom: 4px;
+}
+.map .leaflet-popup-content .lf-popup.poi .content div span {
+  color: #444;
+  font-weight: bold;
+  margin-right: 6px;
+}
+.map .leaflet-popup-content .lf-popup.poi .content .description {
+  color: #777;
+  margin-bottom: 3px;
+  font-size: 15px;
+  font-style: italic;
+}
+.map .leaflet-popup-content .lf-popup.poi .content .address,
+.map .leaflet-popup-content .lf-popup.poi .content .contacts {
+  margin: 10px 0;
+  font-weight: 600;
+  color: #666;
+  font-size: 11px;
+}
+.map .leaflet-popup-content .lf-popup.poi .content .address .contact,
+.map .leaflet-popup-content .lf-popup.poi .content .contacts .contact {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  box-direction: normal;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-direction: row;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  box-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  -o-align-items: center;
+  align-items: center;
+  -ms-flex-align: center;
+}
+.map .leaflet-popup-content .lf-popup.poi .content .address .contact .icon,
+.map .leaflet-popup-content .lf-popup.poi .content .contacts .contact .icon {
+  width: 15px;
+  height: 15px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  margin-bottom: 0;
+}
+.map
+  .leaflet-popup-content
+  .lf-popup.poi
+  .content
+  .address
+  .contact
+  .icon.email,
+.map
+  .leaflet-popup-content
+  .lf-popup.poi
+  .content
+  .contacts
+  .contact
+  .icon.email {
+  width: 25px;
+  background-image: url("../img/SVG_Carte_Couleurs/2_colors/Icons_Hikster_2_colors-86.svg");
+}
+.map .leaflet-popup-content .lf-popup.poi .content:empty {
+  display: none;
+}
+.map .leaflet-popup-content .lf-popup.trail {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  box-direction: normal;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-direction: column;
+  -webkit-box-align: stretch;
+  -moz-box-align: stretch;
+  box-align: stretch;
+  -webkit-align-items: stretch;
+  -moz-align-items: stretch;
+  -ms-align-items: stretch;
+  -o-align-items: stretch;
+  align-items: stretch;
+  -ms-flex-align: stretch;
+}
+.map .leaflet-popup-content .lf-popup.trail .section {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  box-direction: normal;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-direction: row;
+}
+.map .leaflet-popup-content .lf-popup.trail .section .section-name {
+  color: #4e822c;
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+.map .leaflet-popup-content .lf-popup.trail .section .section-values {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  box-direction: normal;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-direction: column;
+  margin-left: 8px;
+}
+.map .leaflet-popup-content .lf-popup.trail .section.trail {
+  margin-top: 15px;
+}
+.map .leaflet-popup-content .lf-popup .link {
+  color: #7ec450;
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 11px;
+  margin-top: 5px;
+}
+.map .leaflet-popup-content .lf-popup .link:hover {
+  color: #4e822c;
+  cursor: pointer;
+}
+.map .leaflet-control-container .leaflet-top.leaflet-right {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  box-direction: normal;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-direction: row;
+}
+.map
+  .leaflet-control-container
+  .leaflet-top.leaflet-right
+  .leaflet-control-scale {
+  -webkit-box-ordinal-group: 1;
+  -moz-box-ordinal-group: 1;
+  box-ordinal-group: 1;
+  -webkit-order: 1;
+  -moz-order: 1;
+  order: 1;
+  -ms-flex-order: 1;
+}
+.map
+  .leaflet-control-container
+  .leaflet-top.leaflet-right
+  .leaflet-control-zoomhome {
+  -webkit-box-ordinal-group: 2;
+  -moz-box-ordinal-group: 2;
+  box-ordinal-group: 2;
+  -webkit-order: 2;
+  -moz-order: 2;
+  order: 2;
+  -ms-flex-order: 2;
+}
+.map .marker-cluster div {
+  font-size: 9px;
+  font-weight: bold;
+}
+.map .marker-cluster.poi {
+  border-radius: 50% 50% 50% 0;
+}
+.map .marker-cluster.poi > div {
+  border-radius: 50% 50% 50% 0;
+}
+.map .marker-cluster.poi span {
+  font-size: 12px;
+  color: blue;
+}
+#detail-box {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+#backButton,
+#closeButton {
+  position: absolute;
+  top: 32px;
+  opacity: 0.6;
+}
+#closeButton {
+  right: 32px;
+}
+#backButton {
+  left: 10px;
+}
+#backButton:hover,
+#closeButton:hover {
+  opacity: 1;
+}

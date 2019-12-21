@@ -1,0 +1,20 @@
+{% load i18n %}
+{% load static from staticfiles %}
+
+<header id="header" class="hk-header hk-header--removable">
+  <div class="hk-header__inner">
+    <div class="hk-header__logo">
+      <a href="/">
+        <img src="{% static 'img/Logo_128px_Green.png' %}" alt="" />
+      </a>
+    </div>
+    <nav class="hk-header__nav">
+      <a target="_blank" href="https://donorbox.org/hikster?amount=10">
+        {% trans "Make a donation" %}
+      </a>
+      <a target="_blank" href="https://community.hikster.com/">
+        <b>{% trans "Ask a question to the community" %}</b>
+      </a>
+    </nav>
+  </div>
+</header>

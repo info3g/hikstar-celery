@@ -1,0 +1,185 @@
+{% extends "website/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load trail_tags %}
+{% load utils_tags %}
+{% block title %}
+    {% trans "About us" %}
+{% endblock title %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{% static 'css/misc-page.css' %}">
+{% endblock head_extra %}
+
+{% block body_container %}
+<div class="misc-page">
+  <section class="hero">
+    <div class="hero__info hero__info--center">
+      <h1 class="hero__title">{% trans "About us" %}</h1>
+    </div>
+  </section>
+  <section>
+    <div class="misc-page__content">
+      <div class="ui items">
+        <div class="item">
+          <a class="ui small image">
+            <img src="{% static 'img/Logo_256px_Green.png' %}" alt="" />
+          </a>
+          <div class="content">
+            <a class="header">
+                {% trans "MANAGE AND VALUE YOUR TRAILS AND TOURIST ACTIVITIES" %}
+            </a>
+            <div class="description">
+              <p>
+                {% blocktrans %}
+                Hikster is a webmapping software suite whose goal is to connect park managers and visitors in order to propel outdoor activities.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                 Park managers have advanced tools allowing - for the first time - to enhance their offer and to better understand the behavior of visitors. They can create new personalized experiences, improve park management and increase their revenues.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                 Visitors have interactive maps, easy to use, in order to take full advantage of the park's offer. These Maps are accessible via the web and via mobile application.
+                {% endblocktrans %}
+              </p>
+              <br />
+              <p>{% trans "ESSENTIAL MEMBERS" %}</p>
+              <p>
+                {% blocktrans %}
+                By becoming an Essential member, you stay on an interface of management for your park. You are masters of your information and all updates are instant visible by the public on our website and mobile application.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% trans "For more information contact us" %} :
+                <a href="mailto:info@hikster.com">info@hikster.com</a>
+              </p>
+              <br />
+              <p>{% trans "PREMIUM MEMBERS" %}</p>
+              <p>
+                {% blocktrans %}
+                Do you want a tailor-made offer? Use our tools in White mark ? Our team of experts is at your disposal.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <br />
+
+        <div class="item">
+          <a class="ui small image">
+            <img src="{% static 'img/azimut-logo.png' %}" alt="" />
+          </a>
+          <div class="content">
+            <a class="header">
+              {% trans "THE KNOW-HOW OF THE AZIMUT GEOMATICS GROUP" %}
+            </a>
+            <div class="description">
+              <p>
+                {% blocktrans %}
+                The realization of the Hikster project was made possible thanks to the unconditional support of the team of
+                {% endblocktrans %}
+                <a href="http://www.goazimut.ca/initial.html?fr" target="_blank">
+                {% trans "AZIMUT Geomatics Group." %}
+                </a>
+                {% blocktrans %}
+                The website, the interactive map and all the data are the result of the work of these professionals of computer science and geomatics who have accompanied us throughout the adventure. We are grateful to them and we thank them!
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <br />
+
+        <div class="item">
+          <a class="ui small image">
+            <img src="{% static 'img/logo_osprey_w_bckgrnd.png' %}" alt="" />
+          </a>
+          <div class="content">
+              <a class="header">{% trans "SUPPORTED BY Osprey" %}</a>
+            <div class="description">
+              <p>
+                <a href="http://www.ospreypacks.com/ca/fr/" target="_blank">
+                  Osprey
+                </a>
+                {% blocktrans %}
+                makes the manufacturing quality of its backpacks a priority. We have the honor to be recognized and supported by this actor of reference in the field of the outdoors. We will have the opportunity to win bags throughout the year.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                "Founded in 1974 and established in Colorado, Osprey's mission is to create innovative, high-performance equipment that reflects our love of adventure and our dedication to the outdoors. . We achieve our goal when we meet the needs of our most demanding consumers and they carry our bags with pride. "
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <br />
+
+        <div class="item">
+          <a class="ui small image">
+            <img src="{% static 'img/logo_espaces.png' %}" alt="" />
+          </a>
+          <div class="content">
+            <a class="header">{% trans "PROMOTED BY ESPACES" %}</a>
+            <div class="description">
+              <p>
+                <a href="http://www.espaces.ca/" target="_blank">
+                  Espaces
+                </a>
+                {% blocktrans %}
+                is the largest outdoor media in Quebec. Their mission: to offer outdoor, adventure and travel enthusiasts, media and events that actively contribute to the realization of their interests.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                ESPACES magazine is available on several platforms including tablets, web and paper version, for free for more than 20 years.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                We are happy that they participate in the promotion of Hikster.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <br />
+
+        <div class="item">
+          <a class="ui small image">
+            <img
+              src="{% static 'img/fondation-montreal-inc-bourse-logo.jpg' %}"
+              alt=""
+            />
+          </a>
+          <div class="content">
+            <a class="header">
+            {% trans "SUPPORTED BY THE MONTREAL FOUNDATION INC." %}
+            </a>
+            <div class="description">
+              <p>
+                {% trans "Hikster is a proud laureate of" %}
+                <a href="http://www.montrealinc.ca/fr" target="_blank">
+                  {% trans "The Montreal Foundation Inc.," %}
+                </a>
+                {% blocktrans %}
+                a non-profit organization whose mission is to propel a new generation of promising Montreal entrepreneurs to success.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                Thanks to the foundation, we have access to the expertise of many experienced business people: An incredible opportunity for our startup. We warmly thank the foundation for the support provided and for believing in our beautiful project!
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <br />
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock body_container %}

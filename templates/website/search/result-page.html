@@ -1,0 +1,37 @@
+{% extends "website/base.html" %}
+{% load i18n %}
+{% load static from staticfiles %}
+{% load render_bundle from webpack_loader %}
+
+{% block head_extra %}
+    <script src="{% static 'libs/popper.min.js' %}"></script>
+    <script
+      src="{% static 'libs/bootstrap/js/bootstrap.min.js' %}"
+    ></script>
+    <link rel="stylesheet" href="{% static 'css/result-page.css' %}">
+
+    {% include "website/components/map-scripts.html" %}
+
+{% endblock head_extra %}
+
+{% block body_container %}
+
+{{ activities|json_script:"activities-data" }}
+{{ types|json_script:"types-data" }}
+{{ difficulties|json_script:"difficulties-data" }}
+{{ poi_categories|json_script:"poi-categories-data" }}
+
+<div id="results-page">
+    {% include "website/components/search/search-form.html" %}
+
+    <div class="results-page">
+        {% include "website/components/search/results-container.html" %}
+
+        <div id="map" class="map" data-pagenav-name="{% trans 'Map' %}"></div>
+    </div>
+</div>
+{% endblock body_container %}
+
+{% block body_js %}
+    {% render_bundle "results_page" %}
+{% endblock body_js %}

@@ -1,0 +1,61 @@
+{% load i18n %}
+
+<td>{% trans "Images" %}</td>
+<td>
+  <div class="row mb-2">
+    <div class="col-12">
+      {% if trail %}
+      <small>
+        {% trans "Note: Setting banner, credit and removing of images requires clicking save to take effect" %}
+      </small>
+      {% endif %}
+    </div>
+  </div>
+  <div v-for="(item, idx) in orderedImages" :key="idx" class="row mb-3">
+    <div class="col-12 col-lg-5 col-xl-4 d-flex align-items-end">
+
+      <input
+        v-if="!item.id && !item.image"
+        type="file"
+        class="form-control-file mb-2"
+        accept="image/*"
+        @change="uploadImage($event, item)"
+      />
+      <template v-else>
+        <img
+          alt=""
+          style="width: 100px; height: 100px;"
+          class="rounded"
+          :src="item.image"
+        />
+        <span v-if="item.image_type === 'banner'" class="ml-2 badge badge-success align-self-center">
+            Banner
+        </span>
+        <button
+          v-else
+          @click="setAsBanner(item)"
+          tabIndex="-1"
+          class="btn btn-sm ml-2"
+        >{% trans "Set as banner" %}</button>
+      </template>
+    </div>
+    <div class="col-12 col-lg-7 pt-3 d-flex align-items-end">
+      <div class="row">
+        <div class="col-auto d-flex align-items-end">
+          <label class="">{% trans "Credit" %}</label>
+        </div>
+        <div class="col-auto">
+          <input class="form-control" type="text" v-model="item.credit" />
+        </div>
+        <div class="col-auto d-flex align-items-end">
+          <label @click="addImage" v-if="idx + 1 === trail.images.length">
+            <hk-plus-icon class="add-icon"></hk-plus-icon>
+          </label>
+          <label @click="removeImage(idx)" v-else for="">
+            <hk-times-icon class="remove-icon"></hk-times-icon>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</td>

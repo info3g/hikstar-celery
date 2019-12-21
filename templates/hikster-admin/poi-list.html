@@ -1,0 +1,171 @@
+{% extends 'hikster-admin/base_sidebar_authenticated.html' %}
+{% load i18n %}
+{% load static from staticfiles %}
+{% load render_bundle from webpack_loader %}
+
+{% block extra_styles %}
+    <style>
+
+    .loader {
+      border: 10px solid #f3f3f3; /* Light grey */
+      border-top: 10px solid #529214;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loader {
+      width: 50px;
+      height: 50px;
+    }
+    </style>
+{% endblock extra_styles %}
+
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:index' %}">{% trans 'Hikster Admin' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:organization' organization_id=organization.id%}">
+            {{ organization.name }}
+        </a>
+    </li>
+    <li class="breadcrumb-item">
+        {% trans "Pois" %}
+    </li>
+{% endblock %}
+
+{% block content %}
+{{ geo_json|json_script:"geojson-data" }}
+{{ point_of_interests|json_script:"poi-data" }}
+{{ poi_categories|json_script:"poi-categories-data" }}
+{{ selected_category|json_script:"selected-category-data" }}
+{{ selected_type|json_script:"selected-type-data" }}
+{{ trail_sections_geojson|json_script:"trail_sections_geojson" }}
+
+<div id="poi-list-component" class="row location-list">
+  <div class="col-lg-5">
+    <div class="row">
+
+        <div class="col-12 mb-2">
+            <a
+              href="{% url 'hikster-admin:poi-new' organization_id=organization.id %}"
+              class="btn btn-sm btn-success"
+            >
+                {% trans "New" %}
+            </a>
+
+            <button :disabled="loading" v-show="hasSelected" class="btn btn-sm btn-danger" @click="deletePois">
+                {% trans "Delete Selected" %}
+            </button>
+
+            <div class="btn-group float-right">
+                <button type="button" class="btn btn-outline-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {[ selectedType.name ]}
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <button
+                      v-for="type in typeChoices"
+                      class="dropdown-item pointer"
+                      @click="selectType(type)"
+                      :key="type.id"
+                    >
+                        {[ type.name ]}
+                    </button>
+                </div>
+            </div>
+
+            <div class="btn-group float-right mr-2">
+                <button type="button" class="btn btn-outline-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {[ selectedCategory.name ]}
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <button
+                      v-for="category in poiCategories.filter(c => c.id !== selectedCategory.id)"
+                      class="dropdown-item pointer"
+                      @click="selectCategory(category)"
+                      :key="category.id"
+                    >
+                        {[ category.name ]}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    <div v-if="loading" class="col-12 d-flex justify-content-center">
+        <div class="loader mt-5"></div>
+    </div>
+
+      <div id="scrollable-container" class="col-12 pt-3 scrollable-container d-none">
+        <div v-show="!loading" class="row header-row">
+          <div class="col-2 text-center">{% trans "Action" %}</div>
+          <div @click="sortData('display_name')" class="col-5 sortable">
+            {% trans "Name" %}
+            <hk-sort-icon v-if="hasPois" :sort-by="sortBy" header="display_name" />
+          </div>
+          <div @click="sortData('date_modified')" class="col-3 sortable">
+            {% trans "Last Modified" %}
+            <hk-sort-icon v-if="hasPois" :sort-by="sortBy" header="date_modified" />
+          </div>
+          <div class="col-2 text-center">{% trans "Online" %}</div>
+        </div>
+        <div v-show="!loading" class="scrollable content row pt-1">
+          <div id="scrollable-content" class="col-12">
+            <div
+              v-for="poi in pois"
+              @mouseover="highlightPoi(poi.poi_id)"
+              @mouseout="_handleHighlightOff"
+              :class="getRowClass(poi.poi_id)"
+              :key="poi.poi_id"
+              :id="'poi-' + poi.poi_id"
+            >
+              <div class="col-2 pt-1 d-flex justify-content-center">
+                <input
+                  v-model="poi.selected"
+                  type="checkbox"
+                  class="pointer"
+                />
+              </div>
+              <div class="col-5">
+                <a :href="poi.poi_id">
+                  {[ poi.display_name ]}
+                </a>
+              </div>
+              <div class="col-3 d-flex">
+                <a :href="poi.poi_id">
+                  {[ poi.date_modified|dateFormat ]}
+                </a>
+              </div>
+              <div class="col-2 text-center online">
+                <a :href="'/poi/' + poi.poi_id" target="_blank">
+                  <hk-globe-icon></hk-globe-icon>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div v-if="!hasPois" class="col-12">
+            <div class="alert alert-secondary text-center" role="alert">
+              {% trans "No poi to display" %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7 map-container">
+    <div id="map" class="map"></div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block js_before %}
+  <script src="{% static 'libs/popper.min.js' %}"></script>
+{% endblock js_before %}
+
+{% block body_extra_js %}
+    <script>
+    var allCategoriesLabel = '{% trans "All categories" %}';
+    </script>
+    {% include "website/components/map-scripts.html" %}
+    {% render_bundle "admin_poi_list" %}
+{% endblock body_extra_js %}

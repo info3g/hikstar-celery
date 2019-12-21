@@ -1,0 +1,13 @@
+<th
+  class="sortable"
+  v-for="(header, idx) in headerNames"
+  :key="idx"
+  @click="sortData(header.key)"
+>
+    {[ header.name ]}
+    <hk-sort-icon
+      v-show="header.key === sortBy.key"
+      :sort-by="sortBy"
+      :header="header.key"
+    />
+</th>

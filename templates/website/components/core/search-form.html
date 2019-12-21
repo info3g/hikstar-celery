@@ -1,0 +1,111 @@
+{% load i18n %}
+
+{{ regions|json_script:"regions-data" }}
+{{ activities|json_script:"activities-data" }}
+
+<div id="search-component" class="hero__search-form">
+  <div class="ui form ">
+    <div class="field">
+      <div>
+        <div class="react-autosuggest__container">
+          <input
+            type="text"
+            autocomplete="off"
+            placeholder="{% trans 'Search for a location' %}"
+            v-model="searchTerm"
+            @input="debounceSearch($event.target.value)"
+          />
+          <ul role="listbox" class="react-autosuggest__suggestions-container">
+            <li
+              role="option"
+              class="react-autosuggest__suggestion"
+              v-for="item in suggestions"
+              @click="selectLocation(item)"
+            >
+              <div>
+                <img
+                  :src="getSuggestionIcon(item.type)"
+                  alt=""
+                />
+                <span>{[ item.name ]}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="main-search__hike-filters">
+      <div class="field--modified ">
+        <div class="Select Select--single">
+          <div class="Select-control" @click="toggleShowRegions">
+            <span class="Select-multi-value-wrapper">
+              <div class="Select-placeholder">
+                <span v-if="selectedRegion.name">
+                  {[ selectedRegion.name ]}
+                </span>
+                <span v-else>{% trans "Region" %}</span>
+              </div>
+            </span>
+            <span class="Select-arrow-zone">
+              <span class="Select-arrow"></span>
+            </span>
+          </div>
+          <div v-show="showRegions" class="Select-menu-outer">
+            <div role="listbox" class="Select-menu">
+              <div
+                class="Select-option"
+                role="option"
+                v-for="region in regions"
+                :key="region.location_id"
+                @click="selectRegion(region)"
+              >
+                {[ region.name ]}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="field--modified ">
+        <div class="Select Select--single">
+          <div class="Select-control" @click="toggleShowActivities">
+            <span class="Select-multi-value-wrapper" id="react-select-3--value">
+              <div class="Select-placeholder">
+                <span>{[ selectedActivity.name ]}</span>
+              </div>
+            </span>
+            <span class="Select-arrow-zone">
+              <span class="Select-arrow"></span>
+            </span>
+          </div>
+
+          <div v-show="showActivities" class="Select-menu-outer">
+            <div role="listbox" class="Select-menu">
+              <div
+                v-for="activity in activities"
+                class="Select-option"
+                role="option"
+                :key="activity.id"
+                @click="selectActivity(activity)"
+              >
+                {[ activity.name ]}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="ui checkbox">
+          <input type="checkbox" id="dog-allowed" v-model="withDog" />
+          <label for="dog-allowed" class="label--white">
+            {% trans "With my dog" %}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button class="fluid ui button" @click="showResultsPage">
+        {% trans "Search / See the map" %}
+      </button>
+    </div>
+  </div>
+</div>

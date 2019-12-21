@@ -1,0 +1,229 @@
+a {
+  cursor: pointer !important;
+}
+.search-header {
+  border-top: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.search-header nav.navbar {
+  padding: 0;
+}
+
+.search-header nav.navbar input {
+  border: 0;
+  box-shadow: none;
+  background-color: #f8f9fa;
+  padding-left: 5px;
+}
+
+.search-header nav.navbar input:focus {
+  z-index: 1;
+}
+
+.search-header .nav-item .dog-filter {
+  margin-top: 8px;
+}
+
+.search-header .search-icon svg {
+  width: 25px;
+  height: 25px;
+  fill: rgba(0,0,0,.5);
+}
+
+.toggle-result svg,
+.search-header .btn-search svg {
+  width: 20px;
+  height: 20px;
+}
+
+.search-header .btn-search svg,
+.toggle-result.active svg {
+  fill: #fff;
+}
+
+.search-header .suggestions {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  z-index: 9999;
+  max-height: 350px;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.ui.checkbox label {
+  cursor: pointer;
+}
+
+.results-container .no-result {
+  font-size: 0.9em;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.search-header .btn.poi-filter {
+  border: 1px solid #7ec450;
+}
+
+.search-header .btn.poi-filter.active {
+  background: #7ec450;
+  color: #fff;
+}
+
+.search-header .poi-filter-items.accordion {
+  position: absolute;
+  position: absolute;
+  z-index: 9999;
+  right: 0;
+  width: 400px;
+  max-height: 500px;
+  overflow-y: auto;
+  top: 60px;
+  right: 10px;
+  padding: 0;
+}
+
+.poi-item {
+  display: flex;
+}
+.poi-item .icon {
+  width: 27px;
+  min-width: 27px;
+  height: 26px;
+  overflow: hidden;
+}
+.poi-filter-items h5 button {
+  color: #333;
+}
+.poi-filter-items h5 button:hover {
+  text-decoration: none;
+  color: #7ec450;
+}
+.poi-filter-items h5 button:focus {
+  text-decoration: none;
+}
+.poi-filter-items .poi-item .icon-inner {
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 50px;
+  height: 50px;
+  margin-left: -12px;
+  margin-top: -7px;
+}
+.poi-items .ui.checkbox label {
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+}
+.ui.checkbox input:checked ~ .box:after,
+.ui.checkbox input:checked ~ label:before,
+.ui.checkbox input:checked ~ label:after {
+  color: #7ec450 !important;
+}
+.suggestions .suggestion-item {
+  border-top: 1px solid #ddd;
+  cursor: pointer;
+  padding: 10px 20px;
+}
+.suggestions .suggestion-item img {
+  margin-top: -10px;
+}
+
+div.suggestion-item:hover {
+  color: #7ec450;
+}
+
+.search-header form {
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.search-header .input-group-prepend span.input-group-text {
+  background-color: #f8f9fa;
+  border: 0;
+  margin-bottom: 5px;
+}
+
+.input-group > .input-group-append:not(:last-child) > .btn,
+.search-header .input-group-append .btn {
+  background-color: #7ec450;
+  color: #f8f9fa;
+  border: 0;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.search-header ul.navbar-nav li {
+  padding: 0 20px;
+}
+
+.navbar-light .navbar-nav .nav-link.has-value {
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: 600;
+}
+
+ul.navbar-nav li .dropdown-menu a.active,
+ul.navbar-nav li .dropdown-menu a:active {
+  background-color: #7ec450;
+  color: #f8f9fa;
+}
+
+.results-page .accordion-wrapper .results-container__item {
+  border-radius: 5px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.results-page .map {
+  height: calc(100vh - 115px) !important;
+}
+
+.results-page .accordion-wrapper {
+  width: 100%;
+}
+
+@media (min-width: 576px) {
+  .results-page .map {
+    left: 355px;
+    width: calc(100vw - 355px);
+  }
+
+  .results-page .accordion-wrapper {
+    width: 355px;
+  }
+}
+
+.in-iframe .results-page .map {
+  height: calc(100vh - 61px) !important;
+}
+
+.in-iframe .results-page .accordion-wrapper {
+  height: calc(100vh - 61px) !important;
+  max-height: calc(100vh - 61px) !important;
+}
+
+.hovereffect span {
+  font-size: 1em;
+  text-transform: capitalize;
+  padding: 0.5em;
+}
+
+div.loader {
+  color: #7ec450;
+}
+
+.search-header .navbar-toggler {
+  border: none;
+  padding: 0;
+}
+
+@media (max-width: 575px) {
+  .search-header .btn-search {
+    padding: 5px 10px;
+  }
+
+  .search-header {
+    padding-bottom: 5px;
+  }
+}

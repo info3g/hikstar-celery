@@ -1,0 +1,104 @@
+{% extends "website/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load trail_tags %}
+{% load utils_tags %}
+{% load render_bundle from webpack_loader %}
+
+{% block title %}
+{{ poi.title }}
+{% endblock title %}
+
+{% block head_extra %}
+    <style>
+    .table .sortable span svg {
+      width: 15px;
+      height: 15px;
+    }
+    </style>
+{% endblock head_extra %}
+
+{% block body_container %}
+<div class="hike-page">
+    <section class="hero" style="background: url({{ banner }}) center center; background-size: cover;">
+        <div class="hero__info hero__info--center">
+            <h1 class="hero__title">
+              {{ poi.title }}
+            </h1>
+            <p class="hero__subtitle">{{ poi.type.name }}</p>
+        </div>
+    </section>
+
+    {% include "website/components/pagenav.html" %}
+
+    <section class="hike-header" id="info" data-pagenav-name="{% trans 'Information' %}">
+        <div class="hike-header__header">
+          <h2 class="hike-header__title">
+            {% if poi.name %}
+              {{ poi.name }}
+            {% else %}
+              {{ poi.type.name }}
+            {% endif %}
+          </h2>
+
+            <!-- Phone numbers -->
+            {% for phone in contacts.phones %}
+                {% trans "Tel." %} {{ phone }}
+                {% if not forloop.last or contacts.emails or contacts.websites %}
+                    &nbsp;|&nbsp;
+                {% endif %}
+            {% endfor %}
+
+            <!-- Emails -->
+            {% for email in contacts.emails %}
+                <a href="mailto: {{ email }} }}">{{ email }}</a>
+                {% if not forloop.last or contacts.websites %} &nbsp;|&nbsp; {% endif %}
+            {% endfor %}
+
+            <!-- Websites -->
+            {% for website in contacts.websites %}
+                <a href="{{ website }}" target="_blank">{{ website }}</a>
+                {% if not forloop.last %} &nbsp;|&nbsp; {% endif %}
+            {% endfor %}
+            <p>
+            <!-- Address -->
+            {{ poi.address.street_name }} {{ poi.address.apartment }} {{ poi.address.city }} {{ poi.address.province }} {{ poi.address.postal_code}} {{ poi.address.country}}
+            </p>
+        </div>
+    </section>
+
+    <section class="hike-about" id="intro" data-pagenav-name="{% trans 'About' %}">
+        <div class="info-page">
+            <h2 class="info-page__headers">{% trans "About" %}</h2>
+            {% if poi.description %}
+              {{ poi.description|safe }}
+            {% else %}
+              <p>{% trans "No information is available now." %}</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section id="details" data-pagenav-name="{% trans 'Details' %}">
+      <div class="info-page">
+        <div class="ui vertical segment">
+          <h2 class="info-page__headers">{% trans "Prices" %}</h2>
+          {% if poi.fare %}
+            {{ poi.fare|safe }}
+          {% else %}
+              <p class="info-page__description">{% trans "Rates unavailable" %}</p>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    {% include "website/components/map.html" %}
+
+    {% include "website/components/gallery.html" with images=poi.images.all %}
+
+</div>
+{% endblock body_container %}
+
+{% block body_js %}
+    {% render_bundle "poi_detail_page" %}
+    {% include "website/components/gallery-scripts.html" %}
+{% endblock body_js %}

@@ -1,0 +1,68 @@
+<script>
+  Vue.component("dropdown-filter", {
+    props: {
+      label: {
+        type: String
+      },
+      selected: {
+        type: [Object, Array]
+      },
+      items: {
+        type: Array
+      },
+      multiple: {
+        type: Boolean,
+        default: false
+      },
+      showValue: {
+        type: Boolean,
+        default: false
+      }
+    },
+    computed: {
+      linkClass() {
+        return {
+          "nav-link": true,
+          "dropdown-toggle": true,
+          "has-value": this.multiple ? this.selected.length : this.selected.id
+        };
+      }
+    },
+    methods: {
+      click(item) {
+        this.$emit("click", item);
+      },
+      isSelected(item) {
+        if (this.multiple) {
+          return this.selected.includes(item.id);
+        } else {
+          return this.selected.id === item.id;
+        }
+      }
+    },
+    template: `
+        <li class="nav-item dropdown">
+            <a
+                :class="linkClass"
+                href="#"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >
+                {[ label ]}
+                <template v-if="showValue && selected.name">({[ selected.name ]})</template>
+                <template v-if="multiple && selected.length">({[ selected.length ]})</template>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a
+                    v-for="item in items"
+                    :key="item.id"
+                    :class="{'dropdown-item': true, active: isSelected(item)}"
+                    @click="click(item)"
+                >{[ item.name ]}</a>
+            </div>
+        </li>
+    `
+  });
+</script>

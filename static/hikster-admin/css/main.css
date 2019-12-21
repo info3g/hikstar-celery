@@ -1,0 +1,207 @@
+a,
+a:hover {
+  color: #7ed15e;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+select option {
+  padding: 5px 2px 1px;
+}
+
+.pointer {
+  cursor: pointer !important;
+}
+
+.no-border {
+  border: none !important;
+}
+
+.ul-sidebar .nav-link {
+  color: #7ed15e;
+}
+
+.ul-sidebar .nav-link.active {
+  background-color: #7ed15e;
+}
+
+.form-control.invalid {
+  border-color: #dc3545;}
+.form-control.invalid ~ .invalid-feedback {
+  display: block;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  color: #fff;
+  text-decoration: none;
+  background-color: #7ed15e;
+}
+
+.sortable {
+  cursor: pointer;
+}
+
+.sortable span svg {
+  width: 15px;
+  height: 15px;
+  margin-top: -5px;
+}
+
+.table th {
+  text-align: left;
+}
+
+.scrollable-container .header-row {
+  font-weight: bold;
+}
+
+.online a:hover {
+  color: #7ed15e;
+  fill: #7ed15e;
+}
+
+.online svg {
+  width: 20px;
+  height: 20px;
+}
+
+.online a {
+  margin-top: -2px;
+  display: inline-block;
+}
+
+.online img {
+  width: 50px;
+  height: 50px;
+  padding: 0 !important;
+}
+
+.scrollable.content .row {
+  border-top: 1px solid #dee2e6
+}
+.scrollable.content .selected {
+  background: #7ED15E;
+}
+.scrollable.content .selected a {
+  color: #fff;
+}
+#scrollable-content {
+  overflow-y: auto;
+  max-height: calc(100vh - 260px);
+}
+
+/* Start map styles */
+.leaflet-control-filelayer .icon {
+  max-width: 70%;
+  max-height: 70%;
+  margin: 4px;
+}
+
+.leaflet-draw-actions a {
+  color: #fff !important;
+}
+/* End map styles
+
+/* Start organization detail page */
+.org-detail-component .table tr:first-child th,
+.org-detail-component .table tr:first-child td {
+  border-top: none;
+}
+
+.org-detail-component .table.readonly tr td:first-child {
+  font-weight: bold;
+}
+.org-detail-component .table.readonly th,
+.org-detail-component .table.readonly td {
+  padding-top: 1.4rem;
+  padding-bottom: 1.4rem;
+}
+.org-detail-component td.org-name span {
+  color: #7ed15e;
+  cursor: pointer;
+}
+.org-detail-component td.org-name span:hover {
+  text-decoration: underline;
+}
+
+.org-detail-component th,
+.org-detail-component td {
+  vertical-align: middle;
+}
+
+/* End organization detail page */
+
+/* Start location list page */
+
+.trail-section-list table tr.selected td a,
+.trail-section-list table tr.selected td,
+.location-list table tr.selected td {
+  background: #7ed15e;
+  color: #fff !important;
+}
+
+.location-list table .online a:hover {
+  color: #7ed15e;
+  fill: #7ed15e;
+}
+
+.location-list table .online svg {
+  width: 20px;
+  height: 20px;
+}
+
+.trail-section-list .map-container,
+.location-list .map-container {
+  margin-top: -3em !important;
+  padding-right: 0 !important;
+}
+
+.trail-section-list .map,
+.location-list .map {
+  width: 100%;
+  min-height: 450px;
+  height: calc(100vh - 112px);
+}
+
+/* end location list page */
+
+/* Start location detail page */
+.add-icon,
+.remove-icon {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+.add-icon {
+  color: #7ed15e;
+  fill: #7ed15e;
+}
+
+.remove-icon {
+  color: #dc3545;
+  fill: #dc3545;
+}
+
+/* End location detail page */
+
+/* Start Trail List page */
+.trail-section-list .filter {
+  position: relative;
+}
+
+.trail-section-list .activities {
+  position: absolute;
+  right: 0;
+  top: 39px;
+  border: 1px solid #28a745;
+  border-radius: 10px;
+  z-index: 999;
+  padding: 10px;
+  background: white;
+  list-style: none;
+  min-width: 160px;
+}
+
+/* End Trail List page */

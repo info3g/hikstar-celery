@@ -1,0 +1,64 @@
+{% extends "website/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load render_bundle from webpack_loader %}
+{% load trail_tags %}
+{% load utils_tags %}
+{% block title %}
+    {% trans "Hikster" %}
+{% endblock title %}
+
+{% block head_extra %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+{% endblock head_extra %}
+
+{% block body_container %}
+<div class="misc-page">
+  <section class="hero hero--winter">
+    <div class="hero__content">
+      <div class="hero__content--left">
+        <h1 class="hero__title">
+          <strong>
+            {% trans "Find" %}
+          </strong>
+          <br />
+          <small>
+            {% trans "your playground" %}
+          </small>
+        </h1>
+      </div>
+      <div class="hero__content--right">
+        {% include "website/components/core/search-form.html" %}
+      </div>
+    </div>
+  </section>
+
+  <section class="gps-announcement">
+    <div class="gps-announcement-details pt-5 px-2">
+      <h2>
+        <small>{% trans "We currently have more than" %}</small>
+        <strong>
+          {{ location_count }} {% trans "hiking places" %}.
+        </strong>
+      </h2>
+      <p>
+        {% trans "Join the community of enthusiasts quickly" %}
+      </p>
+      <div class="col-md-4 mx-auto py-5">
+        <a class="join-btn btn px-5 btn-lg" href="https://community.hikster.com" target="_blank">
+          {% trans "Join the community" %}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {% include "website/core/home/showcase.html" %}
+</div>
+{% endblock body_container %}
+
+{% block body_js %}
+  <script>
+    var mapStyle = "";
+  </script>
+  {% render_bundle "home" %}
+{% endblock body_js %}

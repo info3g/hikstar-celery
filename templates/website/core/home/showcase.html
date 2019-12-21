@@ -1,0 +1,83 @@
+{% load static from staticfiles %}
+{% load i18n %}
+
+<section class="showcase-header pb-md-5">
+  <div>
+    <h2>
+      {% trans "Our" %}
+      <strong>{% trans "purpose" %}</strong>
+    </h2>
+    <p>
+      {% trans "Our goal is simple: simplify the organization of your outings." %}
+    </p>
+    <p>
+      {% blocktrans %}
+        We create detailed maps and guide in collaboration with the park managersso that you can explore nature with confidence.
+      {% endblocktrans %}
+    </p>
+    <p>
+      {% blocktrans %}
+        You can filter by activity, distance, level of difficulty ... to find THE outing  that corresponds to your desire.
+      {% endblocktrans %}
+    </p>
+    <p>
+      {% blocktrans %}
+        Join also our amazing community to share your favorite destinations,  ask questions or organize outdoor adventures.
+      {% endblocktrans %}
+    </p>
+    <p>{% trans "Come, we are so happy to welcome you!" %}</p>
+    <p>
+      {% trans "Any questions? Contact" %}
+      <a href="mailto:info@hikster.com">info@hikster.com</a>
+    </p>
+  </div>
+  <div class="showcase-header__partners">
+    <div class="showcase-header__partner mb-5 mb-md-0">
+      <h3>
+        <strong>
+          Osprey
+          <small>{% trans "supports us" %}</small>
+        </strong>
+      </h3>
+      <a
+        class="ui centered tiny image"
+        href="http://www.ospreypacks.com/ca/fr/"
+        target="_blank"
+        ><img src="{% static 'img/logo_osprey_w_bckgrnd.png' %}" alt="Osprey"
+      /></a>
+    </div>
+    <div class="showcase-header__partner mb-5 mb-md-0">
+      <h3>
+        <strong>
+        {% trans "The Ministry of Tourism of Quebec support us" %}
+        </strong>
+      </h3>
+      <a
+        class="ui centered small image"
+        href="http://onepercentfortheplanet.org/"
+        target="_blank"
+      >
+        <img src="{% static 'img/tourisme.jpg' %}" alt=""/>
+      </a>
+    </div>
+    <div class="showcase-header__partner">
+      <h3>
+        <strong>
+          <small>{% trans "We are partner of" %}</small>
+          Rando Québec
+        </strong>
+      </h3>
+      <a
+        class="ui centered small image"
+        href="https://randoquebec.ca/fr"
+        target="_blank"
+        ><img
+          class="randoquebec_logo"
+          src="{% static 'img/logo-randoquebec--150.jpeg' %}"
+          alt="Rando Québec"
+      /></a>
+    </div>
+  </div>
+</section>
+
+<section class="bottom-hero">&nbsp;</section>

@@ -1,0 +1,64 @@
+<!-- -*- coding: utf-8 -*- -->
+{% load i18n %}
+{% load static %}
+
+<footer class="footer" role="contentinfo">
+  <div class="footer-logo">
+    <img
+      src="{% static 'img/Logo_256px_Blanc.png' %}"
+      alt="Logo image"
+    />
+  </div>
+  <div class="footer-links">
+    <ul>
+      <li>
+        <h3>{% trans "The society" %}</h3>
+      </li>
+      <li><a href="{% url "about" %}">{% trans "About us" %}</a></li>
+      <li><a href="{% url "toc" %}">{% trans "Terms of use" %}</a></li>
+      <li><a target="_blank" href="https://donorbox.org/hikster?amount=10">{% trans "Make a donation" %}</a></li>
+      <li><a target="_blank" href="https://community.hikster.com/">{% trans "Ask a question to the community" %}</a></li>
+    </ul>
+    <ul>
+      <li>
+        <h3>{% trans "Useful links" %}</h3>
+      </li>
+      <li><a href="http://www.sepaq.com/">Sépaq</a></li>
+      <li><a href="http://www.randoquebec.ca/">Rando Québec</a></li>
+      <li><a href="http://www.ospreypacks.com/ca/fr/">Osprey</a></li>
+      <li><a href="http://www.espaces.ca/">Espaces</a></li>
+    </ul>
+  </div>
+  <hr />
+  <h3 class="footer__social-header">{% trans "Join us on" %}</h3>
+  <ul class="social-icons">
+    <li>
+      <a href="https://www.facebook.com/Hikster-1071485126197771/?fref=ts">
+        <div class="thumbnail thumbnail--facebook"></div>
+      </a>
+    </li>
+    <li>
+      <a href="https://www.instagram.com/hikster__/">
+        <div class="thumbnail thumbnail--instagram"></div>
+      </a>
+    </li>
+    <li>
+      <a href="https://twitter.com/Hikster_inc">
+        <div class="thumbnail thumbnail--twitter"></div>
+      </a>
+    </li>
+    <li>
+      <a href="https://fr.pinterest.com/hikster/">
+        <div class="thumbnail thumbnail--pinterest"></div>
+      </a>
+    </li>
+  </ul>
+  <p>
+    &copy; 2016 - {% now 'Y' %} Hikster, {% trans "All rights reserved" %}
+    <br />
+    - <br />
+    {% blocktrans %}
+        Despite all the care taken in presenting our maps, Hikster can not guarantee the accuracy of the information presented there. The user releases Hikster from any liability for the use of this information.
+    {% endblocktrans %}
+  </p>
+</footer>

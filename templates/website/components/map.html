@@ -1,0 +1,17 @@
+{% load static from staticfiles %}
+{% load i18n %}
+
+<section id="map" class="map" data-pagenav-name="{% trans 'Map' %}"></section>
+
+{% if map_style == "location" %}
+    {{ trails_json|json_script:"trails-json-data"}}
+{% elif map_style == "trail" %}
+    {{ trail_location|json_script:"trail-location-data" }}
+{% elif map_style == "poi" %}
+  {{ poi_json|json_script:"poi-data" }}
+{% endif %}
+
+{{ geo_json|json_script:"geojson-data" }}
+{{ poi_categories|json_script:"poi-categories-data" }}
+
+{% include "website/components/map-scripts.html" %}

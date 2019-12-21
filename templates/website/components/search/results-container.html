@@ -1,0 +1,85 @@
+{% load i18n %}
+{% load static from staticfiles %}
+
+<div id="result-list" class="accordion-wrapper" @scroll="onResultScroll">
+  <div class="accordion-menu accordion-menu--first-level">
+    <div>
+      <div class="accordion accordion__content accordion__content--active">
+        <div class="results-container">
+          <div class="no-result p-3 text-center" v-show="noResult">
+            {% trans "Sorry, it looks like we have no result here." %}
+            <br />
+            {% trans "Please empty your filter or make a new search by moving the map." %}
+          </div>
+          <ul @mouseout="_handleHighlightOff" v-if="results.length > 0">
+            <li class="results-container__item" v-for="result in results">
+              <div
+                class="hovereffect"
+                @mouseover="_handleHighlight(result)"
+                @click="_handleHikeClick(result)"
+              >
+                <img :src="getBanner(result)" alt="" />
+                <div class="overlay text-center">
+                  <h2>{[ result.name ]}</h2>
+                  <h3>{[ result.location_name ]}</h3>
+                  <h2><span>{[ getDifficulty(result.activities) ]}</span></h2>
+                </div>
+                <div class="trail-details">
+                  <div class="trail-details--item">
+                    <p>{% trans "Duration" %}</p>
+                    <strong>{[ result.activities|duration ]}</strong>
+                  </div>
+                  <div class="trail-details--item">
+                    <p>{% trans "Distance" %}</p>
+                    <strong>{[ result.total_length|distance ]}</strong>
+                  </div>
+                  <div class="trail-details--item">
+                    <p>{% trans "Elevation" %} +</p>
+                    <strong>{[ result.height_positive ]}m</strong>
+                  </div>
+                  <div class="trail-details--item">
+                    <p>{% trans "Elevation" %} -</p>
+                    <strong>{[ result.height_negative ]}m</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="user-actions">
+                <div class="btn--result__results-component">
+
+                  <a
+                    class="open-w"
+                    {% if inner_discovery %}
+                      :href= "'/map-widget/hikes/' + result.id + '?{{ widget_params }}'"
+                      onclick="openDetailFrame(this.href); return false;"
+                    {% else %}
+                      :href= "'/hikes/' + result.id"
+                      target="_blank"
+                    {% endif %}
+                  >
+                    {% trans "Path" %} ▸
+                  </a>
+                </div>
+                <div class="btn--result__results-component">
+                  <a
+                    {% if inner_discovery %}
+                      :href= "'/map-widget/locations/' + result.location.id + '?sport=' + selectedActivity.id + '&{{ widget_params }}'"
+                      onclick="openDetailFrame(this.href); return false;"
+                    {% else %}
+                      :href= "'/locations/' + result.location.id + '?sport=' + selectedActivity.id"
+                      target="_blank"
+                    {% endif %}
+                  >
+                    {% trans "Network" %} ▸
+                  </a>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <div v-if="loadingNextPage && !searching" class="text-center loader mb-2">
+            <div class="mx-auto preloader small"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

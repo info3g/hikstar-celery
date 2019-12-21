@@ -1,0 +1,210 @@
+{% extends "website/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load render_bundle from webpack_loader %}
+{% load trail_tags %}
+{% load utils_tags %}
+
+{% block title %}
+    {{ trail.name }}
+{% endblock title %}
+
+{% block head_extra %}
+  <link rel="stylesheet" href="{% static 'libs/leaflet-elevation/leaflet.elevation-0.0.4.css' %}" />
+{% endblock head_extra %}
+
+{% block body_container %}
+<div class="hike-page">
+  <section class="hero" style="background: url({{ banner }}) center center; background-size: cover;">
+    <div class="hero__info hero__info--center">
+      <h1 class="hero__title">
+        {{ trail.name }}
+      </h1>
+      <p class="hero__subtitle">{{ trail.location.name }}</p>
+    </div>
+  </section>
+
+  {% include "website/components/pagenav.html" %}
+
+  <section
+    class="hike-header"
+    id="info"
+    data-pagenav-name="{% trans 'Information' %}"
+  >
+    <div class="hike-header__header">
+      <h2 class="hike-header__title">{{ trail.name }}</h2>
+      {{ trail.location.name }} &nbsp;|&nbsp;
+      <a
+        {% if in_iframe %}
+        href="/map-widget{% url 'location-detail' trail.location.pk %}?{{ widget_params }}"
+        onclick="openDetailFrame(this.href); return false;"
+        {% else %}
+        href="{% url 'location-detail' trail.location.pk %}"
+        {% endif %}
+        >{% trans "Go to the park description page" %}</a
+      ><br />
+    </div>
+    {% if not in_iframe %}
+    <ul class="hike-social-icons">
+      <li class="hike-social-icons__title">{% trans "Share" %}</li>
+      <li>
+        <a
+          href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
+          >Facebook &nbsp;&nbsp;</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://twitter.com/home?status={{ request.build_absolute_uri }}"
+          >Twitter &nbsp;&nbsp;</a
+        >
+      </li>
+      <li>
+        <a
+          href="mailto:?subject=Regarde ce super sentier%20-%20Hikster.com&amp;body={{ request.build_absolute_uri }}"
+          >Email &nbsp;&nbsp;</a
+        >
+      </li>
+    </ul>
+    {% endif %}
+  </section>
+
+  <section
+    class="hike-stats"
+    id="distance"
+    data-pagenav-name="{% trans 'Distance' %}"
+  >
+    <div class="hike-detail--full-width bg-grey">
+      <div class="hike-detail__stats">
+        <h2 class="hike-detail__stats-header">
+          {% trans "Distances and altitude" %}
+        </h2>
+        <div class="hike-detail__stat">
+          <p>{% trans "Type" %}</p>
+          {{ trail.get_path_type_display|default:'-' }}
+        </div>
+        <div class="hike-detail__stat">
+          <p>{% trans "Distance" %}</p>
+          {{ trail.total_length | get_distance }}km
+        </div>
+        <div class="hike-detail__stat">
+          <p>{% trans "Elevation" %} +</p>
+          {% if trail.height_positive %}
+              {{ trail.height_positive }} m
+          {% else %}
+              -
+          {% endif %}
+        </div>
+        <div class="hike-detail__stat">
+          <p>{% trans "Elevation" %} -</p>
+          {% if trail.height_negative %}
+              {{ trail.height_negative }} m
+          {% else %}
+              -
+          {% endif %}
+        </div>
+        <div class="hike-detail__stat">
+          <p>{% trans "Highest point" %}</p>
+          {% if trail.max_elevation %}
+              {{ trail.max_elevation }} m
+          {% else %}
+              -
+          {% endif %}
+          <!-- /react-text -->
+        </div>
+        <div class="hike-detail__stat">
+          <p>{% trans "Lowest point" %}</p>
+          {% if trail.min_elevation %}
+              {{ trail.min_elevation }} m
+          {% else %}
+              -
+          {% endif %}
+        </div>
+        <div class="hike-detail__stat">
+          <p>{% trans "3D Trail" %}</p>
+          {% if in_iframe %}
+            <a
+              href="https://hikster3d.hikster.com/order;hikstertrack={{ trail.pk }}"
+              onclick="openDetailFrame(this.href); return false;"
+            >
+              {% trans "See trail in 3D" %}
+          </a>
+          {% else %}
+          <a href="https://hikster3d.hikster.com/order;hikstertrack={{ trail.pk }}" target="_blank">
+            {% trans "See trail in 3D" %}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="activities" data-pagenav-name="{% trans 'Activities' %}">
+    <div class="hike-sporttypes">
+      <h2 class="hike-sporttypes__header">{% trans "Activities" %}</h2>
+      <table class="ui olive structured very basic table">
+        <thead>
+          <tr>
+            <th>{% trans "Activity" %}</th>
+            <th>{% trans "Estimated time" %}</th>
+            <th>{% trans "Difficulty" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for trail_activity in trail.activities.all %}
+          <tr>
+            <td>{{ trail_activity.activity.name }}</td>
+            <td>{{ trail_activity.duration|duration_to_hours }}</td>
+            <td>{{ trail_activity.get_difficulty_display }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section
+    class="hike-about"
+    id="intro"
+    data-pagenav-name="{% trans 'About' %}"
+  >
+    <div class="info-page">
+      <h2 class="info-page__headers">{% trans "About" %}</h2>
+
+      {% if trail.description %}
+          {{ trail.description|safe }}
+      {% else %}
+          <p>{% trans "No information is available now." %}</p>
+      {% endif %}
+      <a
+        {% if in_iframe %}
+        href="/map-widget{% url 'location-detail' trail.location.pk %}?{{ widget_params }}"
+        onclick="openDetailFrame(this.href); return false;"
+        {% else %}
+        href="{% url 'location-detail' trail.location.pk %}"
+        {% endif %}
+      >
+        <div class="info-page__link">
+          <p>{% trans "Go to the park description page" %}</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  {% if not in_iframe %}
+    {% include "website/includes/stay22.html" %}
+  {% elif not no_accommodation %}
+    {% include "website/includes/stay22.html" %}
+  {% endif %}
+
+  {% include "website/components/map.html" %}
+
+  {% include "website/components/gallery.html" with images=trail.images.all %}
+</div>
+{% endblock body_container %}
+
+{% block body_js %}
+    <script src="{% static 'libs/d3js/d3.v3.min.js' %}"></script>
+    <script src="{% static 'libs/leaflet-elevation/leaflet.elevation-0.0.4.min.js' %}"></script>
+    {% render_bundle "trail_detail_page" %}
+    {% include "website/components/gallery-scripts.html" %}
+    <script type="text/javascript" src="{% static 'src/pages/widget-detail-frame.js' %}" ></script>
+{% endblock body_js %}

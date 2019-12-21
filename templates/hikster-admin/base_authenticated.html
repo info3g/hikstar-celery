@@ -1,0 +1,17 @@
+{% extends "hikster-admin/base_sidebar.html" %}
+{% load i18n %}
+
+{% block body_before_container %}
+  {% include 'hikster-admin/include/navbar.html' %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      {% block breadcrumbs %}
+        <li class="breadcrumb-item active">{% trans 'Hikster Admin' %}</li>
+      {% endblock %}
+    </ol>
+  </nav>
+{% endblock body_before_container %}
+
+{% block body_container %}
+  {% block content %}{% endblock %}
+{% endblock body_container %}

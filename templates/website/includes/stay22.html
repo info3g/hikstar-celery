@@ -1,0 +1,55 @@
+{% load i18n %}
+{% load l10n %}
+
+<section id="accommodation" class="hike-about">
+  <div class="info-page">
+    <h2 class="info-page__headers">{% trans "Nearby accommodation" %}</h2>
+
+    <div>
+    <script id="stay22-script">
+      document.addEventListener("DOMContentLoaded", function(e) {
+        // 1. Edit widget size
+        var settings22 = {
+          width: "100%", // set the width in px or %
+          height: "550px" // set the height in px or %
+        };
+        // 2. Fill out your config here and the rest should work
+        var s22obj = {
+          aid: "hikster", // your affiliate id for tracking
+          maincolor: "87d255",
+          navimage: ROOT_URL + "/static/img/Logo_128px_Blanc.png",
+          markerimage: ROOT_URL + "/static/img/Logo_128px_Blanc.png",
+          hidebrandlogo: true
+        };
+
+        {% if stay22 %}
+          {% localize off %}
+            s22obj.lat = {{ stay22.lat }};
+            s22obj.lng = {{ stay22.lng }};
+          {% endlocalize %}
+        {% endif %}
+        // Leave this part intact
+        var params22 = "";
+        for (var key in s22obj) {
+          if (params22) {
+            params22 += "&";
+          }
+          params22 += key + "=" + encodeURIComponent(s22obj[key]);
+        }
+        var div22 = document.getElementById("stay22-script");
+        div22.insertAdjacentHTML(
+          "afterend",
+          '<iframe id="stay22-widget" width="' +
+            settings22.width +
+            '" height="' +
+            settings22.height +
+            '" src="' +
+            "https://www.stay22.com/embed/gm?" +
+            params22 +
+            '" frameborder="0"></iframe>'
+        );
+      });
+    </script>
+    </div>
+  </div>
+</section>

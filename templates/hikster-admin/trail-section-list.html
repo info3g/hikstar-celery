@@ -1,0 +1,170 @@
+{% extends 'hikster-admin/base_sidebar_authenticated.html' %}
+{% load i18n %}
+{% load static %}
+{% load render_bundle from webpack_loader %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:index' %}">{% trans 'Hikster Admin' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:organization' organization_id=organization.id%}">
+            {{ organization.name }}
+        </a>
+    </li>
+    <li class="breadcrumb-item">
+        {% trans "Trail Sections" %}
+    </li>
+{% endblock %}
+
+{% block content %}
+<div id="trail-section-list" class="row trail-section-list">
+  {{ geo_json|json_script:"geojson-data" }}
+  {{ location_geojson|json_script:"location_geojson_data" }}
+  {{ trail_sections|json_script:"trail-sections-data" }}
+  {{ activities|json_script:"activities-data" }}
+
+  <!-- Modal -->
+  <div class="modal fade" id="update-activity-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{% trans "Select Activity" %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-6" v-for="activity in validActivities" :key="activity.id">
+              <div class="form-group">
+                <div class="form-check">
+                  <input v-model="newActivities" type="checkbox" class="form-check-input pointer" :value="activity.id" :id="'activity' + activity.id">
+                  <label class="form-check-label pointer" :for="'activity' + activity.id">
+                    {[ activity.name ]}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button :disabled="deleting" type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Cancel" %}</button>
+          <button :disabled="deleting" type="button" class="btn btn-primary" @click="updateActivities">{% trans "Save" %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-lg-5">
+    <div class="row">
+        <div class="col-12 mb-2">
+            <a href="{% url 'hikster-admin:trail-section-new' organization_id=organization.id %}" class="btn btn-sm btn-success">
+                {% trans "New" %}
+            </a>
+            <button :disabled="deleting" v-show="hasSelected" class="btn btn-sm btn-danger" @click="deleteTrailSections">
+                {% trans "Delete Selected" %}
+            </button>
+
+            <button :disabled="deleting" v-show="hasSelected" class="btn btn-sm btn-info" @click="showUpdateActivityModal">
+              {% trans "Update Activity" %}
+            </button>
+            <div class="btn-group float-right">
+                <button type="button" class="btn btn-outline-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {[ selectedActivity.name ]}
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <button
+                      v-for="activity in activityChoices"
+                      class="dropdown-item pointer"
+                      @click="updateSelectedActivity(activity)"
+                      :key="activity.id"
+                    >
+                        {[ activity.name ]}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 pt-3 scrollable-container">
+            <div class="row header-row">
+                <div class="col-2 text-center">{% trans "Action" %}</div>
+                <div
+                  @click="sortData('trailsection_id')"
+                  class="col-3 sortable"
+                >
+                    {% trans "ID" %}
+                    <hk-sort-icon
+                      v-show="hasTrailSections"
+                      :sort-by="sortBy"
+                      header="trailsection_id"
+                    />
+                </div>
+                <div
+                  @click="sortData('name')"
+                  class="col-7 sortable"
+                >
+                    {% trans "Name" %}
+                    <hk-sort-icon
+                      v-show="hasTrailSections"
+                      :sort-by="sortBy"
+                      header="name"
+                    />
+                </div>
+            </div>
+            <div class="scrollable content row pt-1">
+              <div id="scrollable-content" class="col-12">
+                <div
+                  v-for="trailSection in filteredTrailSections"
+                  @mouseover="highlightTrailSection(trailSection.trailsection_id)"
+                  @mouseout="_handleHighlightOff"
+                  :id="'section-' + trailSection.trailsection_id"
+                  :class="getRowClass(trailSection.trailsection_id)"
+                  :key="trailSection.trailsection_id"
+                >
+                    <div class="col-2 pt-1 d-flex justify-content-center">
+                        <input v-model="trailSection.selected" type="checkbox" class="pointer" />
+                    </div>
+                    <div class="col-3 d-flex">
+                        <a :href="trailSection.trailsection_id" >
+                            {[ trailSection.trailsection_id ]}
+                        </a >
+                    </div>
+                    <div class="col-7">
+                        <a :href="trailSection.trailsection_id">
+                            {[ trailSection.name ]}
+                        </a >
+                    </div>
+                </div>
+
+              </div>
+              <div v-show="!hasTrailSections" class="col-12">
+                  <div class="alert alert-secondary text-center" role="alert">
+                      {% trans "No trail section to display" %}
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="col-lg-7 map-container">
+    <div id="map" class="map"></div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block js_before %}
+  <script src="{% static 'libs/popper.min.js' %}"></script>
+{% endblock js_before %}
+
+{% block body_extra_js %}
+  <script>
+    var headerNames = [
+      {key: 'trailsection_id', name: '{% trans "ID" %}'},
+      {key: 'name', name: '{% trans "Name" %}'}
+    ];
+    var allLabel = '{% trans "All" %}';
+  </script>
+  {% include "website/components/map-scripts.html" %}
+  {% render_bundle "admin_trail_section_list" %}
+{% endblock body_extra_js %}

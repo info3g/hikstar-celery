@@ -1,0 +1,13 @@
+{% load i18n %}
+
+<div id="pagenav-wrapper" class="pagenav">
+    <div class="pagenav">
+        <ul id="pagenav">
+            <li v-for="section in navItems">
+                <a @click="scrollTo(section.id)" :class="{ activePagenavItem: activeSection === section.id }">
+                    {[ section.title ]}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

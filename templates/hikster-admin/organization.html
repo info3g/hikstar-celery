@@ -1,0 +1,212 @@
+
+{% extends 'hikster-admin/base_sidebar_authenticated.html' %}
+{% load i18n %}
+{% load render_bundle from webpack_loader %}
+
+{% block content %}
+{{ organization_data|json_script:"organization_data" }}
+
+<div class="row justify-content-center">
+  <div class="col-12">
+    <div id="org-detail-component" class="org-detail-component">
+      <h1 v-show="isEditing">{% trans "Modify organization" %}</h1>
+      <table :class="{table: true, readonly: !isEditing}">
+        <tbody>
+
+          <tr>
+            {% if organization.aid %}
+            <tr>
+              <td>{% trans "AID" %}</td>
+              <td>{{ aid }}</td>
+            </tr>
+            {% endif %}
+
+            <th scope="row">{% trans "Organization" %}</th>
+            <td v-if="!isEditing" class="org-name">
+              <span @click="toggleEditing">
+                {[ organization.name ]}
+              </span>
+            </td>
+            <td v-else>
+              <input
+                :class="{ 'form-control': true, 'invalid': getError('name') }"
+                type="text"
+                v-model="organization.name"
+                required
+              />
+              <div class="invalid-feedback">
+                {[ getError("name") ]}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>{% trans "Contact" %}</td>
+            <td v-if="!isEditing">{[ organization.contact ]}</td>
+            <td v-else>
+              <input
+                class="form-control"
+                type="text"
+                v-model="organization.contact"
+              />
+            </td>
+          </tr>
+          <tr v-if="!isEditing">
+            <td>{% trans "Address" %}</td>
+            <td>{[ formattedAddress ]}</td>
+          </tr>
+          <tr v-if="isEditing">
+            <td class="pl-4">{% trans "Street name" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="organization.address.street_name"
+              />
+            </td>
+          </tr>
+          <tr v-if="isEditing">
+            <td class="pl-4">{% trans "Apartment" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="organization.address.apartment"
+              />
+            </td>
+          </tr>
+          <tr v-if="isEditing">
+            <td class="pl-4">{% trans "City" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="organization.address.city"
+              />
+            </td>
+          </tr>
+          <tr v-if="isEditing">
+            <td class="pl-4">{% trans "Province" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="organization.address.province"
+              />
+            </td>
+          </tr>
+          <tr v-if="isEditing">
+            <td class="pl-4">{% trans "Postal code" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="organization.address.postal_code"
+              />
+            </td>
+          </tr>
+          <tr v-if="isEditing">
+            <td class="pl-4">{% trans "Po box" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="organization.address.po_box"
+              />
+            </td>
+          </tr>
+          <tr v-if="isEditing">
+            <td class="pl-4">{% trans "Country" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="organization.address.country"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>{% trans "First Name" %}</td>
+            <td v-if="!isEditing">
+              <span @click="toggleEditing">
+                {[ organization.user.first_name ]}
+              </span>
+            </td>
+            <td v-else>
+              <input
+                class="form-control"
+                type="text"
+                v-model="organization.user.first_name"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>{% trans "Last Name" %}</td>
+            <td v-if="!isEditing">
+              <span @click="toggleEditing">
+                {[ organization.user.last_name ]}
+              </span>
+            </td>
+            <td v-else>
+              <input
+                class="form-control"
+                type="text"
+                v-model="organization.user.last_name"
+              />
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">{% trans "Email" %}</th>
+            <td v-if="!isEditing">
+              <span @click="toggleEditing">
+                {[ organization.user.email ]}
+              </span>
+            </td>
+            <td v-else>
+              <input
+                :class="{ 'form-control': true, 'invalid': getError('user.email') }"
+                type="text"
+                v-model="organization.user.email"
+              />
+              <div class="invalid-feedback">
+                {[ getError("user.email") ]}
+              </div>
+            </td>
+          </tr>
+          <tr v-show="isEditing">
+            <td colspan="2" class="text-right py-4 no-border">
+              <button
+                @click="cancel"
+                type="button"
+                class="btn"
+                :disabled="loading"
+              >
+                {% trans "Cancel" %}
+              </button>
+              <button
+                @click="save"
+                type="button"
+                class="btn btn-success"
+                :disabled="loading"
+              >
+                {% trans "Save" %}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+
+
+      {% if organization.aid %}
+        <h2 class="mt-5">{% trans "Widget Information" %}</h2>
+
+        {% include "hikster-admin/includes/widget_loads_table.html" %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block body_extra_js %}
+  {% render_bundle "admin_organization_page" %}
+{% endblock body_extra_js %}

@@ -1,0 +1,17 @@
+{% extends "hikster-admin/base_authenticated.html" %}
+{% load i18n %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <p>{% trans "Select the organization you would like to manage:" %}</p>
+            <ul>
+                {% for org in organizations %}
+                    <li><a href="{% url 'hikster-admin:organization' organization_id=org.id %}">{{ org.name }}</a></li>
+                {% empty %}
+                    <li>{% trans "You do not have any organization." %}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock content %}

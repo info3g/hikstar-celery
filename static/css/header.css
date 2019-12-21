@@ -1,0 +1,12 @@
+header.hk-header {
+  position: relative;
+  padding: 10px;
+}
+
+.hk-header a {
+  color: #333;
+}
+
+.hk-header__inner {
+  padding: 0;
+}

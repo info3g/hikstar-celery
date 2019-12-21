@@ -1,0 +1,70 @@
+{% load i18n %}
+
+<div class="poi-filter">
+  <a @click="showPoiFilter = !showPoiFilter" :class="poiBtnFilterClass">
+    {% trans "Filter POIs" %}
+  </a>
+  <div
+    v-show="showPoiFilter"
+    id="poi-accordion"
+    class="poi-filter-items accordion"
+  >
+    <div v-for="category in poiCategories" class="card" :key="category.name">
+      <div class="card-header" :id="'heading' + category.id">
+        <h5 class="mb-0">
+          <button
+            class="btn btn-link"
+            type="button"
+            data-toggle="collapse"
+            :data-target="'#collapse' + category.id"
+            :aria-controls="'#collapse' + category.id"
+            @click="togglePoiTypes(category.id)"
+          >
+            {[ category.name ]}
+          </button>
+        </h5>
+      </div>
+
+      <div
+        :id="'#collapse' + category.id"
+        :aria-labelledby="'heading' + category.id"
+        class="collapse"
+        data-parent="#poi-accordion"
+      >
+        <div class="card-body poi-items">
+          <div class="ui checkbox">
+            <input
+              type="checkbox"
+              v-model="category.show_all"
+              :id="'select-all-' + category.id"
+              @click="togglePoiSelectAll(category)"
+            />
+            <label :for="'select-all-' + category.id">
+              {% trans "Select all" %}
+            </label>
+          </div>
+          <div v-for="poiType in category.types" class="poi-item">
+            <div class="icon">
+              <div
+                class="icon-inner"
+                :style="getPoiIconClass(poiType.id)"
+              ></div>
+            </div>
+            <div class="ui checkbox">
+              <input
+                type="checkbox"
+                :id="'poi-' + poiType.id"
+                :value="poiType.id"
+                @click="onPoiTypeFilterClick(poiType)"
+                v-model="poiType.show"
+              />
+              <label :for="'poi-' + poiType.id">
+                {[ poiType.name ]}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,126 @@
+{% load i18n %}
+
+<header id="search-component" class="search-header">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <form class="form-inline my-0 pl-2 pr-0 py-2 col-md-5 col-lg-4">
+    <div class="input-group col-12 pl-0">
+      <div class="input-group-prepend">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <span class="input-group-text px-1 search-icon d-none d-md-block">
+          <hk-search-icon></hk-search-icon>
+        </span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="{% trans 'Look for a place' %}"
+        :value="searchTerm"
+        @input="debounceSearch($event.target.value)"
+      />
+      <div class="input-group-append">
+        <button
+          :class="searchBtnClass"
+          type="submit"
+          @click.prevent="searchByLocation"
+          :disabled="disableSearch"
+        >
+          <span class="d-none d-md-block">
+            {% trans 'Search' %}
+          </span>
+          <hk-search-icon class="d-md-none"></hk-search-icon>
+        </button>
+
+        <button
+          :class="toggleResultCls"
+          type="button"
+          @click="toggleResult"
+        >
+          <span v-if="showResults">{% trans "Map" %}</span>
+          <span v-else>{% trans "List" %}</span>
+        </button>
+
+      </div>
+      <div class="suggestions" v-show="suggestions.length > 0">
+        <div
+          class="suggestion-item"
+          v-for="item in suggestions"
+          @click="onSuggestionClick(item)"
+        >
+          <img
+            :src="getSuggestionIcon(item.type)"
+            alt=""
+          />
+
+          <span>{[ item.name ]}</span>
+          <div v-if="item.type === 'trail' && item.address" class="pl-3">
+            <small>{[ item.address ]}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <dropdown-filter
+        :label="selectedActivity.name"
+        :items="activities"
+        :selected="selectedActivity"
+        class="has-value"
+        @click="selectActivity"
+      ></dropdown-filter>
+
+      <dropdown-filter
+        label="{% trans 'Length' %}"
+        :items="lengths"
+        :selected="selectedLength"
+        show-value
+        @click="selectLength"
+      ></dropdown-filter>
+
+      <!-- TODO: Update when type is present in the api -->
+      <!-- <dropdown-filter -->
+      <!-- label="{% trans 'Type' %}" -->
+      <!-- :items="types" -->
+      <!-- :selected="selectedTypes" -->
+      <!-- @click="selectType" -->
+      <!-- ></dropdown-filter> -->
+
+      <dropdown-filter
+        label="{% trans 'Difficulty' %}"
+        :items="difficulties"
+        :selected="selectedDifficulties"
+        @click="selectDifficulty"
+        multiple
+      ></dropdown-filter>
+
+      <li class="nav-item">
+        <div class="dog-filter ui checkbox">
+          <input
+            id="dog-filter"
+            type="checkbox"
+            v-model="withDog"
+            @click="toggleWithDog"
+          />
+          <label for="dog-filter">
+            {% trans "With my dog" %}
+          </label>
+        </div>
+      </li>
+    </ul>
+
+      {% include "website/components/search/poi-filter.html" %}
+    </div>
+  </nav>
+</header>

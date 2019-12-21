@@ -1,0 +1,20 @@
+{% load i18n %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>{% trans "Month" %}</th>
+      <th>{% trans "Widget Loads" %}</th>
+      <th>{% trans "Page Loads" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for data in loads_data %}
+    <tr>
+      <td>{{ data.month|date:"F Y" }}</td>
+      <td>{{ data.widget_loads }}</td>
+      <td>{{ data.page_loads }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

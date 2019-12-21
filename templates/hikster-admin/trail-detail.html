@@ -1,0 +1,218 @@
+{% extends 'hikster-admin/base_sidebar_authenticated.html' %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+{% load render_bundle from webpack_loader %}
+
+{% block extra_styles %}
+    <style>
+    .map {
+      width: 100%;
+      height: 600px;
+    }
+
+    .leaflet-draw-toolbar a {
+      background-image: url(/static/img/map/route.png) !important;
+      background-size: 25px 25px !important;
+      background-position: center !important;
+    }
+    </style>
+    <link rel="stylesheet" href="{% static 'libs/leaflet/dist/leaflet.css' %}" />
+    <link rel="stylesheet" href="{% static 'libs/leaflet-draw/leaflet.draw.css' %}" />
+    <link rel="stylesheet" href="{% static 'libs/leaflet-fullscreen/Control.FullScreen.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/map.css' %}" />
+{% endblock extra_styles %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:index' %}">{% trans 'Hikster Admin' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:organization' organization_id=organization.id%}">
+            {{ organization.name }}
+        </a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:trail-list' organization_id=organization.id %}">
+            {% trans "Trails" %}
+        </a>
+    </li>
+    <li class="breadcrumb-item">
+        {% if trail %}
+            {{ trail.name }}
+        {% else %}
+            {% trans "Create Trail" %}
+        {% endif %}
+    </li>
+{% endblock %}
+
+{% block content %}
+
+<div>
+    {{ graph|json_script:"graph_data" }}
+    {{ trail_data|json_script:"trail_data" }}
+    {{ trail_shape_geojson|json_script:"trail_shape_geojson" }}
+    {{ markers|json_script:"markers_data" }}
+    {{ trail_sections_geojson|json_script:"trail_sections_geojson" }}
+    {{ activities|json_script:"activities_data" }}
+    {{ locations|json_script:"locations_data" }}
+    {{ path_types|json_script:"path_types_data" }}
+</div>
+
+<div id="trail-detail-component">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <h1>
+        {% if trail %}
+          {% trans "Modify Trail" %}
+        {% else %}
+          {% trans "Create New Trail" %}
+        {% endif %}
+        <a
+          href="{% url 'hikster-admin:trail-new' organization_id=organization.id %}"
+          class="btn btn-success float-right"
+        >
+            {% trans "New" %}
+        </a>
+      </h1>
+
+
+      <div v-show="getError('shape_2d')" class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+          <strong>{% trans "Error" %}!</strong> {[ getError("shape_2d") ]}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+
+      <div v-show="successMessage" class="alert alert-success alert-dismissible fade show d-none" role="alert">
+          {[ successMessage ]}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+
+      <table class="table">
+        <tbody>
+          <tr>
+            <th scope="row">{% trans "Name" %}</th>
+            <td>
+              <input
+                :class="{ 'form-control': true, 'invalid': getError('name') }"
+                type="text"
+                v-model="trail.name"
+                required
+              />
+              <div class="invalid-feedback">
+                {[ getError("name") ]}
+              </div>
+            </td>
+          </tr>
+          <tr>
+              <th scope="row">{% trans "Location" %}</th>
+              <td>
+                <select
+                required
+                v-model="trail.location"
+                :class="{'form-control': true, 'invalid': getError('location')}"
+                >
+                  <option v-for="location in locations" :value="location.location_id" :key="location.location_id">
+                    {[ location.name ]}
+                  </option>
+                </select>
+                <div class="invalid-feedback">
+                    {[ getError("location") ]}
+                </div>
+              </td>
+          </tr>
+          <tr>
+              <td>{% trans "Path Type" %}</td>
+              <td>
+                  <select v-model="trail.path_type" class="form-control">
+                      <option v-for="type in pathTypes" :value="type[0]" :key="type[0]">
+                          {[ type[1] ]}
+                      </option>
+                  </select>
+              </td>
+          </tr>
+          <tr>
+              <td>{% trans "Description" %}</td>
+              <td>
+                  <ckeditor :editor="editor" v-model="trail.description" :config="editorConfig"></ckeditor>
+              </td>
+          </tr>
+          <tr>
+              <td>{% trans "Activities" %}</td>
+              <td>
+                  <div v-for="activity in activities" class="form-group" :key="activity.id">
+                      <div class="form-check">
+                          <input v-model="activity.selected" type="checkbox" class="form-check-input pointer" :id="'activity' + activity.id">
+                          <label class="form-check-label pointer" :for="'activity' + activity.id">
+                              {[ activity.name ]}
+                          </label>
+                      </div>
+                  </div>
+              </td>
+          </tr>
+
+
+          <tr>
+              {% include "hikster-admin/trail/images-row.html" %}
+          </tr>
+
+          <tr>
+              <td colspan="2">
+
+                  <small v-if="!hasSteps || !pathLayer">
+                      {% trans "Note: This Trail does not have valid Trail Sections, you will have to redraw the path to update." %}
+                  </small>
+                  <div id="map" class="map">
+                  </div>
+              </td>
+          </tr>
+
+          <tr>
+            <td colspan="2" class="text-right py-4 no-border">
+              <a
+                id="btn-cancel"
+                class="btn"
+                href="{% url 'hikster-admin:trail-list' organization_id=organization.id %}"
+                >Cancel</a
+              >
+              <button @click="save(false)" type="button" class="btn" :disabled="loading">
+                {% trans "Save and continue editing" %}
+              </button>
+              <button
+                @click="save(true)"
+                type="button"
+                class="btn btn-success"
+                :disabled="loading"
+              >
+                {% trans "Save" %}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block body_extra_js %}
+    <script>
+    var pageMode = "create";
+    {% if trail %}
+      pageMode = "edit";
+    {% endif %}
+    </script>
+
+    {% include "website/components/map-scripts.html" %}
+    <script src="{% static 'libs/leaflet/dist/leaflet.js' %}"></script>
+    <script src="{% static 'libs/leaflet-draw/leaflet.draw.js' %}"></script>
+    <script src="{% static 'libs/leaflet.textpath.js' %}"></script>
+    <script src="{% static 'libs/leaflet-fullscreen/Control.FullScreen.js' %}"></script>
+    <script src="{% static 'libs/leaflet.geometryutil.js' %}"></script>
+    <script src="{% static 'libs/turfpoints.min.js' %}"></script>
+
+    {% render_bundle "admin_trail_detail" %}
+{% endblock body_extra_js %}

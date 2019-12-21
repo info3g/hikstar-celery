@@ -1,0 +1,63 @@
+.hero.hero--winter {
+  padding-top: 50px;
+}
+@media screen and (min-width: 900px) {
+  .hero.hero--winter {
+    min-height: 40em;
+    padding: 150px 0 50px;
+  }
+}
+
+.Select-placeholder {
+  cursor: pointer;
+}
+
+.Select-menu .Select-option:hover {
+  background: #c6eaae;
+}
+
+.react-autosuggest__suggestion:hover {
+  color: #7ec450 !important;
+}
+
+.main-search__hike-filters .checkbox {
+  padding: 1em 0;
+}
+
+.ui.checkbox label {
+  cursor: pointer;
+}
+
+.ui.checkbox input:checked ~ .box:after,
+.ui.checkbox input:checked ~ label:before,
+.ui.checkbox input:checked ~ label:after {
+  color: #7ec450 !important;
+}
+
+.ui.checkbox input:active ~ label {
+  color: inherit;
+}
+.gps-announcement p {
+  font-size: 1.2em;
+}
+.gps-announcement .join-btn {
+  background: #7ec450;
+  color: #fff;
+  font-weight: 600;
+}
+
+.showcase-header {
+  background: #ddd;
+}
+.showcase-header__partners small {
+  font-weight: 600;
+  font-size: 90%;
+}
+.bottom-hero {
+  background: url(/static/img/paysage-accueil.jpg) no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 35em;
+}

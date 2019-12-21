@@ -1,0 +1,32 @@
+-- Cleanup public schema (TODO: verify the effect on our db triggers)
+
+DROP FUNCTION IF EXISTS public.creating_new_trail_creates_event() CASCADE;
+DROP FUNCTION IF EXISTS public.evenement_elevation_iu() CASCADE;
+DROP FUNCTION IF EXISTS public.ft_date_insert() CASCADE;
+DROP FUNCTION IF EXISTS public.ft_date_update() CASCADE;
+DROP FUNCTION IF EXISTS public.hike_trailsection_event_intersect_split() CASCADE;
+DROP FUNCTION IF EXISTS public.hike_trailsection_related_objects_d() CASCADE;
+DROP FUNCTION IF EXISTS public.hikster_trailsection_shape_force3d() CASCADE;
+DROP FUNCTION IF EXISTS public.trailsection_latest_updated_d() CASCADE;
+DROP FUNCTION IF EXISTS public.trailsections_snap_extremities() CASCADE;
+DROP FUNCTION IF EXISTS public.update_evenement_geom_when_offset_changes() CASCADE;
+DROP FUNCTION IF EXISTS public.update_evenement_geom_when_troncon_changes() CASCADE;
+DROP FUNCTION IF EXISTS public.update_geometry_of_trail() CASCADE;
+DROP FUNCTION IF EXISTS public.hike_event_latest_updated_d() CASCADE;
+DROP FUNCTION IF EXISTS public.hike_eventtrailsection_geometry() CASCADE;
+DROP FUNCTION IF EXISTS public.hike_eventtrailsection_junction_point_iu() CASCADE;
+DROP FUNCTION IF EXISTS public.ft_Smart_MakeLine(geometry[]) CASCADE;
+DROP FUNCTION IF EXISTS public.add_point_elevation(geometry) CASCADE;
+DROP FUNCTION IF EXISTS public.ft_drape_line(geometry, integer) CASCADE;
+DROP FUNCTION IF EXISTS public.ft_elevation_infos(geometry) CASCADE;
+DROP FUNCTION IF EXISTS public.ft_elevation_infos(geometry, float) CASCADE;
+DROP FUNCTION IF EXISTS public.ST_InterpolateAlong(geometry, geometry) CASCADE;
+DROP FUNCTION IF EXISTS public.ft_troncon_interpolate(integer, geometry) CASCADE;
+DROP FUNCTION IF EXISTS public.update_geometry_of_evenement(integer) CASCADE;
+DROP FUNCTION IF EXISTS ft_smooth_line(geometry) CASCADE;
+DROP FUNCTION IF EXISTS ft_smooth_line(geometry, integer) CASCADE;
+DROP FUNCTION IF EXISTS update_geometry_of_evenement(integer) CASCADE;
+DROP FUNCTION IF EXISTS ST_Smart_Line_Substring(geometry, float, float) CASCADE;
+DROP FUNCTION IF EXISTS ft_merge_path(integer, integer) CASCADE;
+DROP FUNCTION IF EXISTS ft_IsBefore(geometry, geometry) CASCADE;
+DROP FUNCTION IF EXISTS ft_IsAfter(geometry, geometry) CASCADE;

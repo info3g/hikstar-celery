@@ -1,0 +1,46 @@
+{% load i18n %} {% load static from staticfiles %}
+
+<link rel="stylesheet" href="{% static 'libs/leaflet/dist/leaflet.css' %}" />
+<script src="{% static 'libs/leaflet/dist/leaflet.js' %}"></script>
+
+<!-- L.esri for Leaflet -->
+<script src="{% static 'libs/esri-leaflet-2.0.4/esri-leaflet.min.js' %}"></script>
+
+<!-- Marker Cluster plugin for Leaflet -->
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'libs/leaflet-marker-cluster-1.0.0/MarkerCluster.Default.css' %}"
+/>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'libs/leaflet-marker-cluster-1.0.0/MarkerCluster.css' %}"
+/>
+<script src="{% static 'libs/leaflet-marker-cluster-1.0.0/leaflet.markercluster.js' %}"></script>
+
+<!-- zoomhome plugin for Leaflet -->
+<link
+  rel="stylesheet"
+  href="{% static 'libs/leaflet-zoomhome/leaflet.zoomhome.css' %}"
+/>
+<script src="{% static 'libs/leaflet-zoomhome/leaflet.zoomhome.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'css/map.css' %}" />
+
+<script src="{% static 'libs/leaflet-clonelayer/clonelayer.js' %}"></script>
+
+<script>
+  var networkLabel = "{% trans 'Network' %}";
+  var mapStyle = "{{ map_style }}";
+  {% if map_style == "admin-location-list" %}
+    var pathLabel = "{% trans 'Location' %}";
+  {% else %}
+    var pathLabel = "{% trans 'Path' %}";
+  {% endif %}
+  var seeDetails = "{% trans 'See details' %}";
+
+  {% if default_sport %}
+    var defaultSport = {{ default_sport }};
+  {% endif %}
+</script>

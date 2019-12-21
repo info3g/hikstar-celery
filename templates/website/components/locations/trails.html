@@ -1,0 +1,68 @@
+{% load i18n %} {% load trail_tags %}
+<div id="location-trails" class="ui vertical segment" v-if="trails">
+  <h2 class="info-page__headers">{% trans "List of trails" %}</h2>
+  <table class="ui very basic celled table">
+    <thead>
+      <tr>
+        <th
+          class="sortable py-2"
+          v-for="(header, idx) in headerNames"
+          :key="idx"
+          @click="sortData(header.key)"
+        >
+          {[ header.name ]}
+            <span
+              v-show="sortBy.key === header.key && sortBy.ascending"
+            >
+              <hk-caret-up></hk-caret-up>
+            </span>
+            <span
+              v-show="sortBy.key === header.key && !sortBy.ascending"
+            >
+              <hk-caret-down></hk-caret-down>
+            </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="trail in trails" :key="trail.id">
+        {% if in_iframe %}
+          <td>
+            <a
+              :href="'/map-widget' + trail.url + '?{{ widget_params }}'"
+              onclick="openDetailFrame(this.href); return false;"
+            >{[ trail.name ]}</a>
+          </td>
+        {% else %}
+          <td><a :href="trail.url">{[ trail.name ]}</a></td>
+        {% endif %}
+        <td>{[ trail.distance ]}km</td>
+        <td>{[ trail.path ]}</td>
+        <td>{[ trail.activities ]}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  var trails = [];
+  var headerNames = [
+      {key: 'name', name: '{% trans "Name" %}'},
+      {key: 'distance', name: '{% trans "Distance" %}'},
+      {key: 'path', name: '{% trans "Path type" %}'},
+      {key: 'activities', name: '{% trans "Available sports" %}'}
+  ];
+
+  // prettier-ignore-start
+  {% for trail in location.trails.all %}
+  trails.push({
+      id: {{ trail.pk }},
+      url: '{% url "trail-detail" trail.pk %}',
+      name: '{{ trail.name }}',
+      distance: '{{ trail.total_length|get_distance }}',
+      path: '{{ trail.get_path_type_display|default:"" }}',
+      activities: '{{ trail.activity_names|join:", " }}'
+  });
+  {% endfor %}
+  // prettier-ignore-end
+</script>

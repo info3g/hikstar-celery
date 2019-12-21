@@ -1,0 +1,22 @@
+{% extends "website/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load trail_tags %}
+{% load utils_tags %}
+{% block title %}
+    {% trans "Error 404" %}
+{% endblock title %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{% static 'css/misc-page.css' %}">
+{% endblock head_extra %}
+
+{% block body_container %}
+<div class="misc-page">
+  <section class="hero">
+    <div class="hero__info hero__info--center">
+      <h1 class="hero__title">{% trans "Error 404" %}</h1>
+    </div>
+  </section>
+</div>
+{% endblock body_container %}

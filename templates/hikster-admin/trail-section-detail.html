@@ -1,0 +1,156 @@
+{% extends 'hikster-admin/base_sidebar_authenticated.html' %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+{% load render_bundle from webpack_loader %}
+
+{% block extra_styles %}
+    <style>
+    .map {
+      width: 100%;
+      height: 600px;
+    }
+    </style>
+    <link rel="stylesheet" href="{% static 'libs/leaflet/dist/leaflet.css' %}" />
+    <link href="{% static 'libs/leaflet-draw/leaflet.draw.css' %}" rel="stylesheet" />
+{% endblock extra_styles %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:index' %}">{% trans 'Hikster Admin' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:organization' organization_id=organization.id%}">
+            {{ organization.name }}
+        </a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:trail-section-list' organization_id=organization.id %}">
+            {% trans "Trail Sections" %}
+        </a>
+    </li>
+    <li class="breadcrumb-item">
+        {% if trail_section %}
+            {{ trail_section.name }}
+        {% else %}
+            {% trans "Create Trail Section" %}
+        {% endif %}
+    </li>
+{% endblock %}
+
+{% block content %}
+
+{{ trail_section_data|json_script:"trail_section_data" }}
+{{ trail_section_shape_geojson|json_script:"trail_section_shape_geojson" }}
+{{ other_trail_sections_geojson|json_script:"other_trail_sections_geojson" }}
+{{ location_geojson|json_script:"location_geojson_data" }}
+{{ activities|json_script:"activities_data" }}
+
+<div id="trail-section-detail-component">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <h1>
+        {% if trail_section %}
+          {% trans "Modify Trail Section" %}
+        {% else %}
+          {% trans "Create New Trail Section" %}
+        {% endif %}
+      </h1>
+
+      <div v-show="getError('shape_2d')" class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+          <strong>{% trans "Error" %}!</strong> {[ getError("shape_2d") ]}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+
+      <table class="table">
+        <tbody>
+          <tr>
+            <th scope="row">{% trans "Name" %}</th>
+            <td>
+              <input
+                :class="{ 'form-control': true, 'invalid': getError('name') }"
+                type="text"
+                v-model="trailSection.name"
+                required
+              />
+              <div class="invalid-feedback">
+                {[ getError("name") ]}
+              </div>
+            </td>
+          </tr>
+          <tr>
+              <td>{% trans "Comments" %}</td>
+              <td>
+                  <textarea
+                    class="form-control"
+                    rows="5"
+                    v-model="trailSection.comments"
+                  ></textarea>
+              </td>
+          </tr>
+          <tr>
+              <td>{% trans "Activities" %}</td>
+              <td>
+                  <div v-for="activity in activities" class="form-group" :key="activity.id">
+                      <div class="form-check">
+                          <input v-model="activity.selected" type="checkbox" class="form-check-input pointer" :id="'activity' + activity.id">
+                          <label class="form-check-label pointer" :for="'activity' + activity.id">
+                              {[ activity.name ]}
+                          </label>
+                      </div>
+                  </div>
+              </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+                <div id="map" class="map">
+                </div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="text-right py-4 no-border">
+              <a
+                id="btn-cancel"
+                class="btn"
+                href="{% url 'hikster-admin:trail-section-list' organization_id=organization.id %}"
+                >Cancel</a
+              >
+              {% if trail_section %}
+              <button @click="save(false)" type="button" class="btn" :disabled="loading">
+                {% trans "Save and continue editing" %}
+              </button>
+              {% endif %}
+              <button
+                @click="save(true)"
+                type="button"
+                class="btn btn-success"
+                :disabled="loading"
+              >
+                {% trans "Save" %}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block body_extra_js %}
+    <script>
+    var pageMode = "create";
+    {% if trail_section %}
+      pageMode = "edit";
+    {% endif %}
+    </script>
+
+    {% include "website/components/map-scripts.html" %}    
+    <script src="{% static 'libs/togeojson.js' %}"></script>
+    <script src="{% static 'libs/leaflet.filelayer.js' %}"></script>
+    <script src="{% static 'libs/leaflet.geometryutil.js' %}"></script>    
+
+    {% render_bundle "admin_trail_section_detail" %}
+{% endblock body_extra_js %}

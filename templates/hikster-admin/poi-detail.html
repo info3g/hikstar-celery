@@ -1,0 +1,325 @@
+{% extends 'hikster-admin/base_sidebar_authenticated.html' %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+{% load render_bundle from webpack_loader %}
+
+{% block extra_styles %}
+    <style>
+    .map {
+      width: 100%;
+      height: 600px;
+    }
+
+    </style>
+    <link rel="stylesheet" href="{% static 'libs/leaflet/dist/leaflet.css' %}" />
+    <link rel="stylesheet" href="{% static 'libs/leaflet-draw/leaflet.draw.css' %}" />
+    <link rel="stylesheet" href="{% static 'libs/leaflet-fullscreen/Control.FullScreen.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/map.css' %}" />
+{% endblock extra_styles %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:index' %}">{% trans 'Hikster Admin' %}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:organization' organization_id=organization.id%}">
+            {{ organization.name }}
+        </a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'hikster-admin:poi-list' organization_id=organization.id %}">
+            {% trans "Point of Interests" %}
+        </a>
+    </li>
+    <li class="breadcrumb-item">
+        {% if poi %}
+            {{ poi.name }}
+        {% else %}
+            {% trans "Create Point of Interest" %}
+        {% endif %}
+    </li>
+{% endblock %}
+
+{% block content %}
+
+{{ graph|json_script:"graph_data" }}
+{{ poi_data|json_script:"poi_data" }}
+{{ poi_categories|json_script:"poi_categories" }}
+{{ contact_types_data|json_script:"contact_types_data" }}
+{{ other_pois_geojson|json_script:"other_pois_geojson" }}
+{{ trail_sections_geojson|json_script:"trail_sections_geojson" }}
+{{ location_geojson|json_script:"location_geojson_data" }}
+
+<div id="poi-detail-component">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <h1>
+        {% if poi %}
+          {% trans "Modify Poi" %}
+        {% else %}
+          {% trans "Create New Poi" %}
+        {% endif %}
+        <a
+          href="{% url 'hikster-admin:poi-new' organization_id=organization.id %}"
+          class="btn btn-success float-right"
+        >
+            {% trans "New" %}
+        </a>
+      </h1>
+
+
+      <div v-show="getError('shape')" class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+          <strong>{% trans "Error" %}!</strong> {[ getError("shape") ]}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+
+      <div v-show="successMessage" class="alert alert-success alert-dismissible fade show d-none" role="alert">
+          {[ successMessage ]}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+
+      <table class="table">
+        <tbody>
+          <tr>
+            <th scope="row">{% trans "Name" %}</th>
+            <td>
+              <input
+                :class="{ 'form-control': true, 'invalid': getError('name') }"
+                type="text"
+                v-model="poi.name"
+                required
+              />
+              <div class="invalid-feedback">
+                {[ getError("name") ]}
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+              <th scope="row">{% trans "Category" %}</th>
+              <td>
+                  <select
+                    required
+                    v-model="poi.category"
+                    :class="{'form-control': true, 'invalid': getError('category')}"
+                  >
+                      <option v-for="category in categories" :value="category.id" :key="category.id">
+                          {[ category.name ]}
+                      </option>
+                  </select>
+                  <div class="invalid-feedback">
+                      {[ getError("category") ]}
+                  </div>
+              </td>
+          </tr>
+
+          <tr>
+              <th scope="row">{% trans "Type" %}</th>
+              <td>
+                  <select
+                    required
+                    v-model="poi.type"
+                    :class="{'form-control': true, 'invalid': getError('type')}"
+                  >
+                      <option v-for="type in typeChoices" :value="type.id" :key="type.id">
+                          {[ type.name ]}
+                      </option>
+                  </select>
+                  <div class="invalid-feedback">
+                      {[ getError("type") ]}
+                  </div>
+              </td>
+          </tr>
+
+          <tr>
+              <td>{% trans "Description" %}</td>
+              <td>
+                  <ckeditor :editor="editor" v-model="poi.description" :config="editorConfig"></ckeditor>
+              </td>
+          </tr>
+
+          <tr>
+            <td>{% trans "Price" %}</td>
+            <td>
+              <ckeditor :editor="editor" v-model="poi.fare" :config="editorConfig"></ckeditor>
+            </td>
+          </tr>
+
+          <tr>
+            <td>{% trans "Street name" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="poi.address.street_name"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>{% trans "Apartment" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="poi.address.apartment"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>{% trans "City" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="poi.address.city"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>{% trans "Province" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="poi.address.province"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>{% trans "Postal code" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="poi.address.postal_code"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>{% trans "Po box" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="poi.address.po_box"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>{% trans "Country" %}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                v-model="poi.address.country"
+              />
+            </td>
+          </tr>
+          <tr>
+              <td>{% trans "Contact" %}</td>
+              <td>
+                  <div class="form-row py-1" v-for="(contact, idx) in poi.contact" :key="idx">
+                      <div class="col-auto">
+                          <label class="col-form-label" :for="'contact' + idx">{% trans "Type" %}</label>
+                      </div>
+                      <div class="col-auto">
+                          <select :id="'contact' + idx" v-model="contact.type" class="form-control">
+                              <option v-for="type in contactTypes" :value="type[0]" :key="type[0]">
+                                  {[ type[1] ]}
+                              </option>
+                          </select>
+                      </div>
+                      <div class="col-auto">
+                          <label class="col-form-label" >{% trans "Value" %}</label>
+                      </div>
+                      <div class="col-auto">
+                          <input
+                            class="form-control"
+                            type="text"
+                            v-model="contact.value"
+                          />
+                      </div>
+                      <div v-if="idx === poi.contact.length - 1" class="col-auto d-flex align-items-center">
+                          <span @click="addContact" >
+                              <hk-plus-icon class="add-icon"></hk-plus-icon>
+                          </span>
+                      </div>
+                      <div v-else class="col-auto d-flex align-items-center">
+                          <span @click="removeContact(idx)">
+                            <hk-times-icon class="remove-icon"></hk-times-icon>
+                          </span>
+                      </div>
+                  </div>
+              </td>
+          </tr>
+
+          <tr>
+              {% include "hikster-admin/poi/images-row.html" %}
+          </tr>
+
+          <tr>
+              <td colspan="2">
+                  <div id="map" class="map">
+                  </div>
+              </td>
+          </tr>
+
+          <tr>
+            <td colspan="2" class="text-right py-4 no-border">
+              <a
+                id="btn-cancel"
+                class="btn"
+                href="{% url 'hikster-admin:poi-list' organization_id=organization.id %}"
+                >Cancel</a
+              >
+              <button @click="save(false)" type="button" class="btn" :disabled="loading">
+                {% trans "Save and continue editing" %}
+              </button>
+
+              <button
+                @click="save(true, true)"
+                type="button"
+                class="btn"
+                :disabled="loading"
+              >
+                  {% trans "Save and Add new" %}
+              </button>
+              <button
+                @click="save(true)"
+                type="button"
+                class="btn btn-success"
+                :disabled="loading"
+              >
+                {% trans "Save" %}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block body_extra_js %}
+    <script>
+    var pageMode = "create";
+    {% if poi %}
+      pageMode = "edit";
+    {% endif %}
+    </script>
+
+    {% include "website/components/map-scripts.html" %}
+    <script src="{% static 'libs/leaflet/dist/leaflet.js' %}"></script>
+    <script src="{% static 'libs/leaflet-draw/leaflet.draw.js' %}"></script>
+    <script src="{% static 'libs/leaflet.textpath.js' %}"></script>
+    <script src="{% static 'libs/leaflet-fullscreen/Control.FullScreen.js' %}"></script>
+    <script src="{% static 'libs/leaflet.geometryutil.js' %}"></script>
+
+    {% render_bundle "admin_poi_detail" %}
+{% endblock body_extra_js %}

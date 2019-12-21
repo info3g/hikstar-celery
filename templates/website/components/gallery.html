@@ -1,0 +1,22 @@
+{% load i18n %}
+
+{% if images %}
+<section id="gallery" data-pagenav-name="{% trans 'Images' %}" class="gallery">
+  <h2 class="info-page__headers">
+    {% trans "Gallery of images" %}
+  </h2>
+  <div id="gallery-images">
+    {% for image in images %}
+    <a href="{{ image.image.url }}" class="swipebox" rel="gallery">
+      <img alt="" src="{{ image.image.url }}" />
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<style>
+  .gallery-images {
+    min-height: 80px;
+  }
+</style>

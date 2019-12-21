@@ -1,0 +1,90 @@
+{% extends "website/base.html" %}
+{% load i18n %}
+{% load static from staticfiles %}
+{% load render_bundle from webpack_loader %}
+
+{% block head_extra %}
+    <script src="{% static 'libs/popper.min.js' %}"></script>
+    <script
+      src="{% static 'libs/bootstrap/js/bootstrap.min.js' %}"
+    ></script>
+    <link rel="stylesheet" href="{% static 'css/result-page.css' %}">
+
+    {% include "website/components/map-scripts.html" %}
+
+{% endblock head_extra %}
+
+
+{% block css %}
+
+{% endblock %}
+
+{% block body_container %}
+
+{% if color %}
+    <style>
+        .link.details,
+        .section-name,
+        .card-header > h5 > button:hover,
+        .ui.checkbox input:checked ~ .box:after, .ui.checkbox input:checked ~ label:before, .ui.checkbox input:checked ~ label:after  {
+            color: #{{color}} !important;
+        }
+
+        .btn--result__results-component, .btn--result__results-component:hover,
+        ul.navbar-nav li .dropdown-menu a.active, ul.navbar-nav li .dropdown-menu a:active,
+        #search-component > nav > form > div > div > button,
+        #navbarSupportedContent > div > a.active {
+            background-color: #{{color}};
+        }
+
+        #navbarSupportedContent > div > a {
+            border: 1px solid #{{color}};
+        }
+
+    </style>
+{% endif %}
+
+{{ activities|json_script:"activities-data" }}
+{{ types|json_script:"types-data" }}
+{{ difficulties|json_script:"difficulties-data" }}
+{{ poi_categories|json_script:"poi-categories-data" }}
+{% if error_message %}
+
+    <b><h3>{{ error_message }}</h3></b>
+{% else %}
+
+    <div id="results-page">
+
+        <div id="search-panel">{% include "website/components/search/search-form.html" %}</div>
+
+        <div class="results-page">
+            {% include "website/components/search/results-container.html" %}
+
+            <div id="map" class="map" data-pagenav-name="{% trans 'Map' %}"></div>
+        </div>
+    </div>
+
+{% endif %}
+
+{% endblock body_container %}
+{% block body_js %}
+    {% if token %}
+
+        <script>
+
+            {% language 'en'%}
+                const widgetLatMin = {{ bounds.min_lat|floatformat:'6' }};
+                const widgetLngMin = {{ bounds.min_lng|floatformat:'6' }};
+                const widgetLatMax = {{ bounds.max_lat|floatformat:'6' }};
+                const widgetLngMax = {{ bounds.max_lng|floatformat:'6' }};
+            {% endlanguage %}
+
+            const widgetLocations = {% if locations %}"{{ locations }}"{% else %}null{% endif %};
+
+        </script>
+
+        {% render_bundle "results_page" %}
+        <script type="text/javascript" src="{% static 'src/pages/widget-detail-frame.js' %}" ></script>
+    {% endif %}
+
+{% endblock body_js %}

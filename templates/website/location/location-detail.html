@@ -1,0 +1,146 @@
+{% extends "website/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load trail_tags %}
+{% load utils_tags %}
+{% load render_bundle from webpack_loader %}
+
+{% block title %}
+{{ location.name }}
+{% endblock title %}
+
+{% block head_extra %}
+    <style>
+    .table .sortable span svg {
+      width: 15px;
+      height: 15px;
+    }
+    </style>
+{% endblock head_extra %}
+
+{% block body_container %}
+<div class="hike-page">
+    <section class="hero" style="background: url({{ banner }}) center center; background-size: cover;">
+        <div class="hero__info hero__info--center">
+            <h1 class="hero__title">
+                {{ location.name }}
+            </h1>
+        </div>
+    </section>
+
+    {% include "website/components/pagenav.html" %}
+
+    <section class="hike-header" id="info" data-pagenav-name="{% trans 'Information' %}">
+        <div class="hike-header__header">
+            <h2 class="hike-header__title">{{ location.name }}</h2>
+
+            <!-- Phone numbers -->
+            {% for phone in contacts.phones %}
+                {% trans "Tel." %} {{ phone }}
+                {% if not forloop.last or contacts.emails or contacts.websites %}
+                    &nbsp;|&nbsp;
+                {% endif %}
+            {% endfor %}
+
+            <!-- Emails -->
+            {% for email in contacts.emails %}
+                <a href="mailto: {{ email }} }}">{{ email }}</a>
+                {% if not forloop.last or contacts.websites %} &nbsp;|&nbsp; {% endif %}
+            {% endfor %}
+
+            <!-- Websites -->
+            {% for website in contacts.websites %}
+                <a href="{{ website }}" target="_blank">{{ website }}</a>
+                {% if not forloop.last %} &nbsp;|&nbsp; {% endif %}
+            {% endfor %}
+
+            <!-- Address -->
+            <p>
+            {% if location.address.street_name %}{{ location.address.street_name }} {% else %}{% endif %}
+            {% if location.address.apartment %}{{ location.address.apartment }} {% else %}{% endif %}
+            {% if location.address.city %}{{ location.address.city }} {% else %}{% endif %}
+            {% if location.address.province %}{{ location.address.province }} {% else %}{% endif %}
+            {% if location.address.postal_code %}{{ location.address.postal_code}} {% else %}{% endif %}
+            {% if location.address.country %}{{ location.address.country}} {% else %}{% endif %}
+            </p>
+        </div>
+    </section>
+
+    <section class="hike-about" id="intro" data-pagenav-name="{% trans 'About' %}">
+        <div class="info-page">
+            <h2 class="info-page__headers">{% trans "About" %}</h2>
+            {% if location.description %}
+              {{ location.description|safe }}
+            {% else %}
+                <p>{% trans "No information is available now." %}</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section id="details" data-pagenav-name="{% trans 'Details' %}">
+        <div class="info-page">
+           <div class="ui vertical segment">
+                <h2 class="info-page__headers">
+                    {% trans "Living rules" %}
+                </h2>
+                {% if location.living_rules %}
+                  {{ location.living_rules|safe }}
+                {% else %}
+                  <p class="info-page__description">
+                    {% trans "Living rules are not available" %}
+                  </p>
+                {% endif %}
+            </div>
+        
+            <div class="ui vertical segment">
+                <h2 class="info-page__headers">
+                    {% trans "Access period" %}
+                </h2>
+                {% if location.schedule %}
+                  {{ location.schedule|safe }}
+                {% else %}
+                  <p class="info-page__description">
+                    {% trans "Access period or time not available" %}
+                  </p>
+                {% endif %}
+            </div>
+            <div class="ui vertical segment">
+                <h2 class="info-page__headers">{% trans "Prices" %}</h2>
+                {% if location.fare_note %}
+                  {{ location.fare_note|safe }}
+                {% else %}
+                  <p class="info-page__description">{% trans "Rates unavailable" %}</p>
+                {% endif %}
+            </div>
+            <div class="ui vertical segment">
+                <h2 class="info-page__headers">{% trans "Access" %}</h2>
+
+                {% if location.transport %}
+                  {{ location.transport|safe }}
+                {% else %}
+                  <p class="info-page__description">{% trans "Access unavailable" %}</p>
+                {% endif %}
+            </div>
+
+            {% include "website/components/locations/trails.html" %}
+        </div>
+    </section>
+
+    {% if not in_iframe %}
+      {% include "website/includes/stay22.html" %}
+    {% elif not no_accommodation %}
+      {% include "website/includes/stay22.html" %}
+    {% endif %}
+
+    {% include "website/components/map.html" %}
+
+    {% include "website/components/gallery.html" with images=location.images.all %}
+
+</div>
+{% endblock body_container %}
+
+{% block body_js %}
+    {% render_bundle "location_detail_page" %}
+    {% include "website/components/gallery-scripts.html" %}
+    <script type="text/javascript" src="{% static 'src/pages/widget-detail-frame.js' %}" ></script>
+{% endblock body_js %}
